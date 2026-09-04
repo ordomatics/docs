@@ -1,0 +1,33 @@
+---
+title: Ordomatics
+description: A full Odoo 18 ERP you run over WhatsApp.
+template: splash
+hero:
+  tagline: A full Odoo 18 ERP — inventory, accounting, CRM, HR — that you run from WhatsApp.
+  actions:
+    - text: Get started
+      link: /start/introduction/
+      icon: right-arrow
+    - text: Talk to us on WhatsApp
+      link: https://wa.me/221773649575
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Start here" icon="rocket">
+    What Ordomatics is, and how to get your instance running.
+    [Introduction](/start/introduction/)
+  </Card>
+  <Card title="Guides" icon="open-book">
+    Task-by-task walkthroughs for day-to-day work.
+  </Card>
+  <Card title="Reference" icon="setting">
+    Plans, limits and technical detail.
+  </Card>
+  <Card title="Blog" icon="comment">
+    Release notes and what we are working on.
+  </Card>
+</CardGrid>
