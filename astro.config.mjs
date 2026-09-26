@@ -47,25 +47,17 @@ export default defineConfig({
           label: "Start here",
           translations: { fr: "Commencer" },
           items: [
-            { label: "Introduction", slug: "start/introduction" },
-            { label: "Onboarding", slug: "start/onboarding" },
-          ],
-        },
-        {
-          label: "Build on Ordomatics",
-          translations: { fr: "Développer sur Ordomatics" },
-          items: [
-            { label: "Getting Started", slug: "build/getting-started" },
+            { label: "Getting Started", slug: "start/getting-started" },
             {
               label: "Development Workflow",
-              slug: "build/development-workflow",
+              slug: "start/development-workflow",
             },
             {
               label: "Advanced",
               translations: { fr: "Avancé" },
               items: [
-                { label: "Bring Your Own Postgres", slug: "build/byo-postgres" },
-                { label: "Bring Your Own Cluster", slug: "build/byo-cluster" },
+                { label: "Bring Your Own Postgres", slug: "start/byo-postgres" },
+                { label: "Bring Your Own Cluster", slug: "start/byo-cluster" },
               ],
             },
           ],
