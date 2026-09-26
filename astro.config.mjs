@@ -47,10 +47,25 @@ export default defineConfig({
           label: "Start here",
           translations: { fr: "Commencer" },
           items: [
-            { label: "Getting Started", slug: "start/getting-started" },
+            {
+              label: "Getting Started",
+              items: [
+                { label: "Overview", slug: "start/getting-started" },
+                { label: "1. Onboard a project", link: "/start/getting-started/#1-onboard-a-project" },
+                { label: "2. Add a database", link: "/start/getting-started/#2-add-a-database" },
+                { label: "3. Create an environment", link: "/start/getting-started/#3-create-an-environment" },
+              ],
+            },
             {
               label: "Development Workflow",
-              slug: "start/development-workflow",
+              items: [
+                { label: "Overview", slug: "start/development-workflow" },
+                { label: "1. Create your repository", link: "/start/development-workflow/#1-create-your-repository" },
+                { label: "2. Connect GitHub", link: "/start/development-workflow/#2-connect-github" },
+                { label: "3. Develop locally", link: "/start/development-workflow/#3-develop-locally" },
+                { label: "4. Ship through CI/CD", link: "/start/development-workflow/#4-ship-through-cicd" },
+                { label: "5. Point at staging", link: "/start/development-workflow/#5-point-at-staging" },
+              ],
             },
             {
               label: "Advanced",
