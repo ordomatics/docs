@@ -52,6 +52,25 @@ export default defineConfig({
           ],
         },
         {
+          label: "Build on Ordomatics",
+          translations: { fr: "Développer sur Ordomatics" },
+          items: [
+            { label: "Getting Started", slug: "build/getting-started" },
+            {
+              label: "Development Workflow",
+              slug: "build/development-workflow",
+            },
+            {
+              label: "Advanced",
+              translations: { fr: "Avancé" },
+              items: [
+                { label: "Bring Your Own Postgres", slug: "build/byo-postgres" },
+                { label: "Bring Your Own Cluster", slug: "build/byo-cluster" },
+              ],
+            },
+          ],
+        },
+        {
           label: "Guides",
           translations: { fr: "Guides" },
           items: [{ autogenerate: { directory: "guides" } }],
