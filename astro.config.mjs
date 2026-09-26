@@ -71,6 +71,16 @@ export default defineConfig({
               label: "Advanced",
               translations: { fr: "Avancé" },
               items: [
+                {
+                  label: "Manage Deployment",
+                  items: [
+                    { label: "Overview", slug: "start/manage-deployment" },
+                    { label: "1. Add a custom domain", link: "/start/manage-deployment/#1-add-a-custom-domain" },
+                    { label: "2. Update deployment size", link: "/start/manage-deployment/#2-update-deployment-size" },
+                    { label: "3. Pause or resume a deployment", link: "/start/manage-deployment/#3-pause-or-resume-a-deployment" },
+                    { label: "4. Reset a database", link: "/start/manage-deployment/#4-reset-a-database" },
+                  ],
+                },
                 { label: "Bring Your Own Postgres", slug: "start/byo-postgres" },
                 { label: "Bring Your Own Cluster", slug: "start/byo-cluster" },
               ],
