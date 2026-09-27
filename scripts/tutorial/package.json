@@ -1,0 +1,10 @@
+{
+  "name": "editor-tutorial-recorder",
+  "private": true,
+  "type": "module",
+  "description": "Records the Smartacus editor tutorial clips against a local dev stack",
+  "dependencies": {
+    "playwright": "^1.55.0",
+    "qrcode": "^1.5.4"
+  }
+}

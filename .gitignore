@@ -19,3 +19,6 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Tutorial recorder session state (demo login cookie)
+scripts/tutorial/.auth/

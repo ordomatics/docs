@@ -88,6 +88,11 @@ export default defineConfig({
           ],
         },
         {
+          label: "Smartacus editor",
+          translations: { fr: "Éditeur Smartacus" },
+          items: [{ autogenerate: { directory: "editeur" } }],
+        },
+        {
           label: "Guides",
           translations: { fr: "Guides" },
           items: [{ autogenerate: { directory: "guides" } }],
