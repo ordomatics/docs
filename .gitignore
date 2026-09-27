@@ -22,3 +22,4 @@ pnpm-debug.log*
 
 # Tutorial recorder session state (demo login cookie)
 scripts/tutorial/.auth/
+scripts/tutorial/voices/

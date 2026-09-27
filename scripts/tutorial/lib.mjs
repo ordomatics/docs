@@ -68,6 +68,12 @@ const OVERLAY = () => {
         const caption = document.createElement("div");
         caption.id = "tuto-caption";
         document.documentElement.appendChild(caption);
+        // Chrome's red spell-check squiggles on French text distract in clips.
+        const noSpellcheck = () => document.querySelectorAll("[contenteditable]").forEach((el) => {
+            el.spellcheck = false;
+        });
+        new MutationObserver(noSpellcheck).observe(document.documentElement, { childList: true, subtree: true });
+        noSpellcheck();
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = e.clientX + "px";
             cursor.style.top = e.clientY + "px";
@@ -84,6 +90,28 @@ const OVERLAY = () => {
             caption(text) {
                 caption.textContent = text || "";
                 caption.classList.toggle("on", !!text);
+            },
+            // Numbered outlines for an annotated tour screenshot.
+            annotate(items) {
+                document.querySelectorAll(".tuto-note").forEach((n) => n.remove());
+                for (const { rect, n } of items) {
+                    const b = document.createElement("div");
+                    b.className = "tuto-note";
+                    Object.assign(b.style, { position: "fixed", zIndex: 2147483645, pointerEvents: "none",
+                        left: rect.x + 3 + "px", top: rect.y + 3 + "px",
+                        width: rect.width - 6 + "px", height: rect.height - 6 + "px",
+                        border: "3px solid #f59e0b", borderRadius: "8px" });
+                    const badge = document.createElement("div");
+                    badge.textContent = n;
+                    // Centred on the box corner, so it sits mostly outside the region.
+                    Object.assign(badge.style, { position: "absolute", width: "26px", height: "26px",
+                        left: Math.max(-16, 2 - rect.x) + "px", top: Math.max(-16, 2 - rect.y) + "px",
+                        borderRadius: "50%", background: "#f59e0b", color: "#111",
+                        font: "700 15px/26px system-ui, sans-serif", textAlign: "center",
+                        boxShadow: "0 2px 6px rgba(0,0,0,.3)" });
+                    b.appendChild(badge);
+                    document.documentElement.appendChild(b);
+                }
             },
             box(rect) {
                 document.querySelectorAll(".tuto-box").forEach((b) => b.remove());
@@ -106,7 +134,7 @@ const OVERLAY = () => {
 };
 
 /** Starts a recorded session. `finish()` writes public/editeur/<name>.mp4. */
-export async function startClip(name, { storageState, env, audio = false } = {}) {
+export async function startClip(name, { storageState, env, audio = false, viewport = VIEWPORT } = {}) {
     const tmp = fs.mkdtempSync("/tmp/tuto-");
     const browser = await chromium.launch({
         channel: "chrome",
@@ -115,11 +143,11 @@ export async function startClip(name, { storageState, env, audio = false } = {})
         args: ["--use-fake-ui-for-media-stream", "--lang=fr-FR"],
     });
     const context = await browser.newContext({
-        viewport: VIEWPORT,
+        viewport,
         locale: "fr-FR",
         permissions: ["microphone", "clipboard-read", "clipboard-write"],
         storageState,
-        recordVideo: name ? { dir: tmp, size: VIEWPORT } : undefined,
+        recordVideo: name ? { dir: tmp, size: viewport } : undefined,
     });
     await context.addInitScript(OVERLAY);
     const page = await context.newPage();
@@ -186,6 +214,24 @@ export async function highlight(page, locator) {
     await page.evaluate((r) => window.__tuto?.box(r), rect);
 }
 
+/** Numbers screen regions: [[locator | locator[], n], ...]; [] clears.
+ *  An array outlines the union of its elements. */
+export async function annotate(page, entries) {
+    const items = [];
+    for (const [target, n] of entries) {
+        const boxes = [];
+        for (const locator of [target].flat()) {
+            boxes.push(await locator.boundingBox());
+        }
+        const x = Math.min(...boxes.map((b) => b.x));
+        const y = Math.min(...boxes.map((b) => b.y));
+        const right = Math.max(...boxes.map((b) => b.x + b.width));
+        const bottom = Math.max(...boxes.map((b) => b.y + b.height));
+        items.push({ rect: { x, y, width: right - x, height: bottom - y }, n });
+    }
+    await page.evaluate((list) => window.__tuto?.annotate(list), items);
+}
+
 /** Saves src/assets/editeur/<name>.png, without cursor or caption. */
 export async function screenshot(page, name, { clip } = {}) {
     fs.mkdirSync(IMAGE_DIR, { recursive: true });
@@ -208,6 +254,37 @@ export async function screenshot(page, name, { clip } = {}) {
         }
     });
     console.log(out);
+}
+
+/**
+ * Speech from Soynade (run on the dev stack, whose output stays local),
+ * padded and resampled for the virtual mic. Cached under voices/ by name.
+ */
+export function soynadeVoice(name, text, language = "fr", sourceLanguage = language) {
+    const dir = path.join(HERE, "voices");
+    const out = path.join(dir, `${name}.wav`);
+    if (fs.existsSync(out)) {
+        return out;
+    }
+    fs.mkdirSync(dir, { recursive: true });
+    const inputs = JSON.stringify({ text, target_language: language, source_language: sourceLanguage, output_format: "wav", seed: 7 });
+    odooShell(`
+import base64, json
+tool = env['llm.tool'].search([('name', '=', 'soynade_speak')], limit=1)
+res = tool.soynade_speak_execute(json.loads(${JSON.stringify(inputs)}))
+att = env['ir.attachment'].browse(res['urls'][0]['attachment_id'])
+open('/tmp/tuto-voice.wav', 'wb').write(base64.b64decode(att.datas))
+att.unlink()
+env.cr.commit()
+`);
+    const raw = path.join(dir, `${name}.raw.wav`);
+    execFileSync("docker", ["compose", "cp", "odoo:/tmp/tuto-voice.wav", raw], { cwd: DEV_DIR });
+    execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-f", "lavfi", "-t", "1", "-i", "anullsrc=r=48000:cl=mono",
+        "-i", raw, "-f", "lavfi", "-t", "5", "-i", "anullsrc=r=48000:cl=mono", "-filter_complex",
+        "[1:a]aresample=48000,aformat=channel_layouts=mono[v];[0:a][v][2:a]concat=n=3:v=0:a=1",
+        "-c:a", "pcm_s16le", out]);
+    fs.rmSync(raw);
+    return out;
 }
 
 /** Plays a WAV into the PipeWire virtual mic created by withVirtualMic(). */

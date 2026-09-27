@@ -1,0 +1,59 @@
+---
+title: "2. Écrire et relire à la voix"
+description: Dicter du texte à la position du curseur et faire lire un document ou un passage à voix haute.
+sidebar:
+  order: 2
+---
+
+import Clip from "../../../../components/Clip.astro";
+
+La dictée et la lecture à voix haute utilisent les fonctions vocales du
+navigateur : elles sont **gratuites** et ne consomment aucun crédit. Elles
+fonctionnent au mieux dans **Google Chrome**.
+
+## 2.1 Dicter
+
+1. Cliquez dans le document à l'endroit où le texte doit apparaître.
+2. Cliquez sur **Dicter** (le micro) dans la barre d'outils, puis parlez
+   normalement.
+3. Le texte s'écrit au fur et à mesure, à la position du curseur.
+4. Après quelques secondes de silence, la dictée s'arrête d'elle-même. Vous
+   pouvez aussi cliquer de nouveau sur le micro pour l'arrêter.
+
+<Clip src="2-1-dicter.mp4" caption="Dictée d'une phrase à la fin d'un paragraphe" />
+
+Pour **remplacer** un passage, sélectionnez-le avant de dicter : le texte
+dicté prend sa place.
+
+:::tip[Relisez après la dictée]
+La reconnaissance vocale n'ajoute pas toujours les majuscules et la
+ponctuation finale. Corrigez-les au clavier, ou sélectionnez la phrase et
+utilisez **Régénérer** (partie 3) pour la reformuler proprement.
+:::
+
+:::note[Le micro ne répond pas ?]
+- La première fois, le navigateur demande l'autorisation d'utiliser le
+  microphone : acceptez-la.
+- Si vous l'avez refusée, l'éditeur affiche « Accès au microphone refusé » :
+  autorisez le microphone pour ce site dans les paramètres du navigateur
+  (icône à gauche de l'adresse), puis rechargez la page.
+- Hors de Chrome, un message vous indique que la reconnaissance vocale n'est
+  pas prise en charge.
+:::
+
+## 2.2 Lire à voix haute
+
+1. Pour lire **un passage**, sélectionnez-le. Pour lire **à partir d'un
+   endroit**, cliquez simplement à cet endroit.
+2. Cliquez sur **Lire à voix haute** (le haut-parleur).
+3. Chaque mot est surligné pendant qu'il est lu.
+4. La lecture s'arrête à la fin de la sélection (ou du document). Cliquez de
+   nouveau sur le haut-parleur pour l'arrêter plus tôt.
+
+<Clip src="2-2-lire-a-voix-haute.mp4" caption="Lecture d'un paragraphe sélectionné (vidéo sans son)" />
+
+Une fois la lecture terminée ou arrêtée, votre sélection ou la position de
+votre curseur est rétablie : un nouveau clic relit le même passage.
+
+C'est un bon moyen de **relire** un courrier avant de l'envoyer, ou de faire
+écouter un document à quelqu'un qui lit difficilement le français.
