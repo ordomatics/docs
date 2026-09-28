@@ -1,26 +1,76 @@
 ---
 // Tutorial clip from public/editeur/, recorded by scripts/tutorial: silent and
 // looping, or (voice) a clip with a voice-over the reader starts themselves.
+// Each clip has its own anchor, which the share buttons link to.
 interface Props {
 	src: string;
 	caption?: string;
 	voice?: boolean;
 }
 const { src, caption, voice = false } = Astro.props;
+
+const id = `clip-${src.split("/").pop()!.replace(/\.mp4$/, "")}`;
+const link = new URL(`${Astro.url.pathname}#${id}`, Astro.site ?? Astro.url).href;
+const fr = Astro.url.pathname.startsWith("/fr/");
+const title = caption ?? (fr ? "Tutoriel de l'éditeur Smartacus" : "Smartacus editor tutorial");
+const text = encodeURIComponent(`${title} — ${link}`);
+const url = encodeURIComponent(link);
+const t = fr
+	? { share: "Partager", copy: "Copier le lien", copied: "Lien copié", label: "Partager cette vidéo" }
+	: { share: "Share", copy: "Copy link", copied: "Link copied", label: "Share this video" };
+const networks = [
+	{ name: "WhatsApp", href: `https://wa.me/?text=${text}` },
+	{ name: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${url}` },
+	{ name: "X", href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${url}` },
+	{ name: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${url}` },
+];
 ---
 
-<figure class="clip">
+<figure class="clip" id={id}>
 	{voice ? (
 		<video src={`/editeur/${src}`} playsinline controls preload="metadata"></video>
 	) : (
 		<video src={`/editeur/${src}`} autoplay loop muted playsinline controls preload="metadata"></video>
 	)}
 	{caption && <figcaption>{caption}</figcaption>}
+	<div class="clip-share" aria-label={t.label} data-link={link} data-title={title}>
+		<button type="button" class="clip-share-native" hidden>{t.share}</button>
+		{networks.map((n) => (
+			<a href={n.href} target="_blank" rel="noopener noreferrer" aria-label={`${t.share} — ${n.name}`}>{n.name}</a>
+		))}
+		<button type="button" class="clip-share-copy" data-copied={t.copied}>{t.copy}</button>
+	</div>
 </figure>
+
+<script>
+	// The native share sheet only where the browser offers one (mostly phones).
+	for (const bar of document.querySelectorAll<HTMLElement>(".clip-share")) {
+		const link = bar.dataset.link!;
+		const native = bar.querySelector<HTMLButtonElement>(".clip-share-native")!;
+		if (navigator.share) {
+			native.hidden = false;
+			native.addEventListener("click", () => {
+				navigator.share({ title: bar.dataset.title, url: link }).catch(() => {});
+			});
+		}
+		const copy = bar.querySelector<HTMLButtonElement>(".clip-share-copy")!;
+		const label = copy.textContent;
+		copy.addEventListener("click", async () => {
+			try {
+				await navigator.clipboard.writeText(link);
+				copy.textContent = copy.dataset.copied!;
+			} catch {
+				prompt("", link);
+			}
+			setTimeout(() => (copy.textContent = label), 2000);
+		});
+	}
+</script>
 
 <style>
 	.clip {
 		margin: 1.25rem 0;
+		scroll-margin-top: 5rem;
 	}
 	.clip video {
 		width: 100%;
@@ -31,5 +81,31 @@ const { src, caption, voice = false } = Astro.props;
 		margin-top: 0.4rem;
 		font-size: var(--sl-text-sm);
 		color: var(--sl-color-gray-3);
+	}
+	.clip-share {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin-top: 0.5rem;
+	}
+	.clip-share a,
+	.clip-share button {
+		padding: 0.15rem 0.65rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--sl-color-gray-2);
+		font: inherit;
+		font-size: var(--sl-text-xs);
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.clip-share a:hover,
+	.clip-share button:hover {
+		border-color: var(--sl-color-accent);
+		color: var(--sl-color-accent-high);
+	}
+	.clip-share [hidden] {
+		display: none;
 	}
 </style>
