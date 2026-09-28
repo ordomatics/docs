@@ -62,7 +62,7 @@ const clips = {
     // B.1 Devenir affilié
     async demande() {
         resetAffiliation();
-        const { page, finish } = await startClip("bonus-1-devenir-affilie", { storageState: AUTH });
+        const { page, finish } = await startClip("bonus-1-devenir-affilie", { storageState: AUTH, voiceOver: { language: "fr" } });
         await openAccountPanel(page);
         const card = page.locator(".sa-affiliate-request");
         await highlight(page, card);
@@ -90,14 +90,15 @@ const clips = {
     // B.2 et B.3 : l'espace affilié et le retrait
     async espace() {
         approveWithCommissions();
-        const { page, finish, fastForward } = await startClip("bonus-2-espace-affilie", { storageState: AUTH });
+        const { page, finish, fastForward } = await startClip("bonus-2-espace-affilie", { storageState: AUTH, voiceOver: { language: "fr" } });
         await openAccountPanel(page);
         const mini = page.locator(".sa-affiliate-mini");
         await mini.waitFor({ timeout: 15000 });
         await highlight(page, mini);
         await caption(page, "Une fois approuvé, votre solde de parrainage s'affiche ici", 3000);
         await highlight(page, null);
-        await caption(page, "Cliquez sur Voir pour ouvrir votre espace affilié");
+        // The click loads a new page, which drops the caption: let the line finish first.
+        await caption(page, "Cliquez sur Voir pour ouvrir votre espace affilié", 3000);
         // The dev stack builds the referral link on localhost; show the production address instead.
         await page.route("**/editor/affiliate/summary**", async (route) => {
             const response = await route.fetch();

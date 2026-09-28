@@ -154,11 +154,12 @@ function spokenText(text) {
 }
 
 /**
- * A French caption spoken in Wolof by Soynade (translated, then voiced), cached
- * under voices/wo/ with the Wolof text Soynade actually spoke next to it.
+ * A French caption spoken by Soynade in `language` ("wo": translated to Wolof,
+ * then voiced; "fr": voiced as is), cached under voices/<language>/ with the
+ * text Soynade actually spoke next to it.
  */
-export function wolofLine(frText) {
-    const dir = path.join(HERE, "voices/wo");
+export function voiceLine(frText, language = "wo") {
+    const dir = path.join(HERE, "voices", language);
     const key = crypto.createHash("sha1").update(spokenText(frText)).digest("hex").slice(0, 12);
     const out = path.join(dir, `${key}.wav`);
     if (fs.existsSync(out)) {
@@ -169,7 +170,7 @@ export function wolofLine(frText) {
     // The voice model sometimes babbles on well past the text (confirmed by
     // transcribing one back): reject takes far longer than the words need.
     for (const seed of [7, 11, 23, 42]) {
-        const inputs = JSON.stringify({ text: spokenText(frText), target_language: "wo", source_language: "fr",
+        const inputs = JSON.stringify({ text: spokenText(frText), target_language: language, source_language: "fr",
             output_format: "wav", seed });
         const spoken = odooShell(`
 import base64, json
@@ -188,17 +189,20 @@ print("SPOKEN:" + res['output_data']['spoken_text'])
         fs.rmSync(raw);
         const seconds = audioDuration(out);
         if (seconds <= spoken.length * 0.1 + 1.5) {
-            fs.writeFileSync(path.join(dir, `${key}.txt`), `FR: ${spokenText(frText)}\nWO: ${spoken}\nseed: ${seed}\n`);
+            fs.writeFileSync(path.join(dir, `${key}.txt`), `FR: ${spokenText(frText)}\n${language.toUpperCase()}: ${spoken}\nseed: ${seed}\n`);
             return out;
         }
         console.log(`rejected ${seconds.toFixed(1)} s take (seed ${seed}) for: ${spoken}`);
         fs.rmSync(out);
     }
-    throw new Error(`No usable Wolof take for: ${frText}`);
+    throw new Error(`No usable ${language} take for: ${frText}`);
 }
 
+export const wolofLine = (frText) => voiceLine(frText, "wo");
+
 /** Starts a recorded session. `finish()` writes public/editeur/<name>.mp4.
- *  `voiceOver: { say, overrides }` adds a Wolof voice-over, one line per caption.
+ *  `voiceOver: { language, say, overrides }` adds a Soynade voice-over ("wo" by
+ *  default, or "fr"), one line per caption.
  *  `say` maps a caption to simpler French to translate (Soynade's Wolof
  *  translation fails on longer phrasings); `overrides` to an audio file. */
 export async function startClip(name, { storageState, env, audio = false, viewport = VIEWPORT, voiceOver } = {}) {
@@ -221,7 +225,10 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
     const started = Date.now();
     const marks = [];
     const voice = voiceOver
-        ? { started, cues: [], busyUntil: 0, overrides: voiceOver.overrides || {}, say: voiceOver.say || {} }
+        ? {
+            started, cues: [], busyUntil: 0, overrides: voiceOver.overrides || {}, say: voiceOver.say || {},
+            language: voiceOver.language || "wo",
+        }
         : null;
     if (voice) {
         VOICE.set(page, voice);
@@ -322,7 +329,7 @@ export async function caption(page, text, holdMs = 0) {
         if (voice.busyUntil > Date.now()) {
             await pause(page, voice.busyUntil - Date.now());
         }
-        const file = voice.overrides[text] || wolofLine(voice.say[text] || text);
+        const file = voice.overrides[text] || voiceLine(voice.say[text] || text, voice.language);
         voice.cues.push({ at: (Date.now() - voice.started) / 1000, file });
         voice.busyUntil = Date.now() + audioDuration(file) * 1000 + 300;
     }
