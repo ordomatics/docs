@@ -1,6 +1,8 @@
 ---
 // Share buttons (WhatsApp, Facebook, X, LinkedIn, copy link, and the phone's
 // share sheet where available) for one link: a tutorial video or a page.
+// compact: a single "Share" button that opens the phone's share sheet, or on
+// desktop a small panel with the same buttons.
 import { Icon } from "@astrojs/starlight/components";
 
 // WhatsApp mark from Simple Icons (CC0); Starlight's icon set has no WhatsApp.
@@ -11,10 +13,12 @@ interface Props {
 	title: string;
 	fr: boolean;
 	label: string;
+	compact?: boolean;
 }
-const { link, title, fr, label } = Astro.props;
+const { link, title, fr, label, compact = false } = Astro.props;
 const text = encodeURIComponent(`${title} — ${link}`);
 const url = encodeURIComponent(link);
+const panelId = `share-${link.replace(/^https?:\/\/[^/]+/, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`;
 const t = fr
 	? { share: "Partager", on: "Partager sur", copy: "Copier le lien", copied: "Lien copié" }
 	: { share: "Share", on: "Share on", copy: "Copy link", copied: "Link copied" };
@@ -24,10 +28,20 @@ const networks = [
 	{ name: "X", icon: "x.com", color: "var(--sl-color-white)", href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${url}` },
 	{ name: "LinkedIn", icon: "linkedin", color: "#0A66C2", href: `https://www.linkedin.com/sharing/share-offsite/?url=${url}` },
 ] as const;
+const shareIcon = `<svg viewBox="0 0 24 24" width="1.1rem" height="1.1rem" fill="none" stroke="currentColor" stroke-width="2"
+	stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" />
+	<circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>`;
 ---
 
-<div class="clip-share" role="group" aria-label={label} data-link={link} data-title={title}>
+<div class:list={["clip-share", { "is-compact": compact }]} data-link={link} data-title={title}>
+	{compact ? (
+		<button type="button" class="clip-share-toggle" aria-expanded="false" aria-controls={panelId}>
+			<Fragment set:html={shareIcon} /><span>{t.share}</span>
+		</button>
+	) : (
 		<span class="clip-share-label">{t.share}</span>
+	)}
+	<div class="clip-share-items" id={panelId} role="group" aria-label={label} hidden={compact}>
 		{networks.map((n) => (
 			<a href={n.href} target="_blank" rel="noopener noreferrer" title={`${t.on} ${n.name}`}
 				aria-label={`${t.on} ${n.name}`} style={`--brand: ${n.color}`}>
@@ -41,23 +55,54 @@ const networks = [
 		<button type="button" class="clip-share-copy" title={t.copy} aria-label={t.copy} data-copied={t.copied}>
 			<Icon name="link" size="1.1rem" />
 		</button>
-		<button type="button" class="clip-share-native" title={t.share} aria-label={t.share} hidden>
-			<svg viewBox="0 0 24 24" width="1.1rem" height="1.1rem" fill="none" stroke="currentColor" stroke-width="2"
-				stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" />
-				<circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>
-		</button>
+		{!compact && (
+			<button type="button" class="clip-share-native" title={t.share} aria-label={t.share} hidden>
+				<Fragment set:html={shareIcon} />
+			</button>
+		)}
 		<span class="clip-share-status" role="status"></span>
 	</div>
+</div>
 
 <script>
-	// The native share sheet only where the browser offers one (mostly phones).
+	// Phones (coarse pointer + Web Share) get their own share sheet; elsewhere
+	// the compact button opens the panel of buttons.
+	const phoneShare = () => !!navigator.share && matchMedia("(pointer: coarse)").matches;
 	for (const bar of document.querySelectorAll<HTMLElement>(".clip-share")) {
 		const link = bar.dataset.link!;
-		const native = bar.querySelector<HTMLButtonElement>(".clip-share-native")!;
-		if (navigator.share) {
+		const share = () => navigator.share({ title: bar.dataset.title, url: link }).catch(() => {});
+		const native = bar.querySelector<HTMLButtonElement>(".clip-share-native");
+		if (native && navigator.share) {
 			native.hidden = false;
-			native.addEventListener("click", () => {
-				navigator.share({ title: bar.dataset.title, url: link }).catch(() => {});
+			native.addEventListener("click", share);
+		}
+		const toggle = bar.querySelector<HTMLButtonElement>(".clip-share-toggle");
+		const panel = bar.querySelector<HTMLElement>(".clip-share-items")!;
+		if (toggle) {
+			const setOpen = (open: boolean) => {
+				panel.hidden = !open;
+				toggle.setAttribute("aria-expanded", String(open));
+			};
+			toggle.addEventListener("click", () => {
+				if (phoneShare()) {
+					share();
+				} else {
+					setOpen(panel.hidden);
+					if (!panel.hidden) {
+						panel.querySelector<HTMLElement>("a, button")?.focus();
+					}
+				}
+			});
+			document.addEventListener("click", (e) => {
+				if (!panel.hidden && !bar.contains(e.target as Node)) {
+					setOpen(false);
+				}
+			});
+			bar.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && !panel.hidden) {
+					setOpen(false);
+					toggle.focus();
+				}
 			});
 		}
 		const copy = bar.querySelector<HTMLButtonElement>(".clip-share-copy")!;
@@ -76,11 +121,18 @@ const networks = [
 
 <style>
 	.clip-share {
+		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.35rem;
 		margin-top: 0.5rem;
+	}
+	.clip-share-items {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem;
 	}
 	.clip-share-label,
 	.clip-share-status {
@@ -90,8 +142,8 @@ const networks = [
 	.clip-share-label {
 		margin-right: 0.15rem;
 	}
-	.clip-share a,
-	.clip-share button {
+	.clip-share-items a,
+	.clip-share-items button {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -105,15 +157,45 @@ const networks = [
 		cursor: pointer;
 		transition: color 0.15s, border-color 0.15s;
 	}
-	.clip-share a:hover,
-	.clip-share a:focus-visible {
+	.clip-share-items a:hover,
+	.clip-share-items a:focus-visible {
 		color: var(--brand);
 		border-color: var(--brand);
 	}
-	.clip-share button:hover,
-	.clip-share button:focus-visible {
+	.clip-share-items button:hover,
+	.clip-share-items button:focus-visible,
+	.clip-share-toggle:hover,
+	.clip-share-toggle:focus-visible,
+	.clip-share-toggle[aria-expanded="true"] {
 		color: var(--sl-color-accent-high);
 		border-color: var(--sl-color-accent);
+	}
+	/* Compact: one pill button; the buttons open in a small panel below it. */
+	.clip-share-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		height: 2rem;
+		padding: 0 0.8rem 0 0.65rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--sl-color-gray-2);
+		font: inherit;
+		font-size: var(--sl-text-xs);
+		cursor: pointer;
+		transition: color 0.15s, border-color 0.15s;
+	}
+	.is-compact .clip-share-items {
+		position: absolute;
+		top: calc(100% + 0.4rem);
+		left: 0;
+		z-index: 10;
+		padding: 0.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+		background: var(--sl-color-bg);
+		box-shadow: var(--sl-shadow-md);
 	}
 	.clip-share [hidden] {
 		display: none;

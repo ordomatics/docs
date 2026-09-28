@@ -27,7 +27,7 @@ const title = caption ?? (fr ? "Tutoriel de l'éditeur Smartacus" : "Smartacus e
 		<video src={`/editeur/${src}`} autoplay loop muted playsinline controls preload="metadata"></video>
 	)}
 	{caption && <figcaption>{caption}</figcaption>}
-	<ShareBar link={link} title={title} fr={fr} label={fr ? "Partager cette vidéo" : "Share this video"} />
+	<ShareBar compact link={link} title={title} fr={fr} label={fr ? "Partager cette vidéo" : "Share this video"} />
 </figure>
 
 <style>
