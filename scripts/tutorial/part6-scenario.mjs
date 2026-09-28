@@ -4,9 +4,21 @@ import {
 } from "./lib.mjs";
 import { collapseCopilot, openEditor, resetWorkspace } from "./demo.mjs";
 import { SCAN_PDF, makeSamples } from "./samples.mjs";
+import { fileURLToPath } from "node:url";
 
 const env = devEnv();
 const DICTATED = "Une collation sera offerte à l'issue de l'assemblée.";
+// What the Wolof voice-over says where a caption's own wording doesn't
+// translate (checked against Soynade: these do).
+export const VOICE_SAY = {
+    "1. Connectez-vous depuis « Mon compte »": "1. Connectez-vous à votre compte",
+    "2. Importez la convocation scannée de l'an dernier": "2. Importez le courrier scanné",
+    "… et cliquez sur Modifier pour en extraire le texte (attente accélérée)": "Cliquez sur Modifier pour lire le texte",
+    "3. Cliquez à la fin d'un paragraphe et dictez un ajout": "3. Ajoutez une phrase avec votre voix",
+    "5. Sélectionnez le paragraphe et faites-le lire à voix haute": "5. Sélectionnez le paragraphe et écoutez-le",
+    "6. Passez en Aperçu, puis exportez le PDF": "6. Ouvrez l'aperçu, puis téléchargez le PDF",
+    "✅ La nouvelle convocation est prête à être imprimée ou envoyée": "C'est terminé, le document est prêt",
+};
 const paragraph = (page, text) => page.locator(".ProseMirror p").filter({ hasText: text }).first();
 
 async function run() {
@@ -14,7 +26,10 @@ async function run() {
     resetWorkspace();
     const wav = soynadeVoice("dictee-collation", DICTATED);
     await withVirtualMic(async (micEnv) => {
-        const clip = await startClip("6-scenario-complet", { env: micEnv, audio: true });
+        // Wolof voice-over; the dictation step plays the French sentence being dictated.
+        const clip = await startClip("6-scenario-complet", {
+            env: micEnv, audio: true, voiceOver: { say: VOICE_SAY, overrides: { [`🎙️ « ${DICTATED} »`]: wav } },
+        });
         const { page, context, finish, fastForward } = clip;
         await context.addInitScript(SILENT_TTS);
         await openEditor(page);
@@ -101,4 +116,6 @@ async function run() {
     });
 }
 
-await run();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+    await run();
+}

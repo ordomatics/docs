@@ -1,15 +1,20 @@
 ---
-// Silent looping tutorial clip from public/editeur/, recorded by
-// scripts/tutorial.
+// Tutorial clip from public/editeur/, recorded by scripts/tutorial: silent and
+// looping, or (voice) a clip with a voice-over the reader starts themselves.
 interface Props {
 	src: string;
 	caption?: string;
+	voice?: boolean;
 }
-const { src, caption } = Astro.props;
+const { src, caption, voice = false } = Astro.props;
 ---
 
 <figure class="clip">
-	<video src={`/editeur/${src}`} autoplay loop muted playsinline controls preload="metadata"></video>
+	{voice ? (
+		<video src={`/editeur/${src}`} playsinline controls preload="metadata"></video>
+	) : (
+		<video src={`/editeur/${src}`} autoplay loop muted playsinline controls preload="metadata"></video>
+	)}
 	{caption && <figcaption>{caption}</figcaption>}
 </figure>
 

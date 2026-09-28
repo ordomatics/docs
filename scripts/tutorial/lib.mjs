@@ -3,6 +3,7 @@
 // into the page, plus MP4/PNG output straight into the docs site.
 import { chromium } from "playwright";
 import { execFileSync, spawn } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -137,8 +138,70 @@ const OVERLAY = () => {
     }
 };
 
-/** Starts a recorded session. `finish()` writes public/editeur/<name>.mp4. */
-export async function startClip(name, { storageState, env, audio = false, viewport = VIEWPORT } = {}) {
+// Voice-over state per recorded page: when each caption's line starts, and
+// until when it is still being spoken (the next caption waits for it).
+const VOICE = new WeakMap();
+
+function audioDuration(file) {
+    return parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration",
+        "-of", "csv=p=0", file], { encoding: "utf8" }));
+}
+
+/** What a caption says aloud: no emoji, quote marks or bracketed asides. */
+function spokenText(text) {
+    return text.replace(/\([^)]*\)/g, "").replace(/[«»"“”…]|\p{Extended_Pictographic}|️/gu, "")
+        .replace(/\s+/g, " ").trim();
+}
+
+/**
+ * A French caption spoken in Wolof by Soynade (translated, then voiced), cached
+ * under voices/wo/ with the Wolof text Soynade actually spoke next to it.
+ */
+export function wolofLine(frText) {
+    const dir = path.join(HERE, "voices/wo");
+    const key = crypto.createHash("sha1").update(spokenText(frText)).digest("hex").slice(0, 12);
+    const out = path.join(dir, `${key}.wav`);
+    if (fs.existsSync(out)) {
+        return out;
+    }
+    fs.mkdirSync(dir, { recursive: true });
+    const raw = path.join(dir, `${key}.raw.wav`);
+    // The voice model sometimes babbles on well past the text (confirmed by
+    // transcribing one back): reject takes far longer than the words need.
+    for (const seed of [7, 11, 23, 42]) {
+        const inputs = JSON.stringify({ text: spokenText(frText), target_language: "wo", source_language: "fr",
+            output_format: "wav", seed });
+        const spoken = odooShell(`
+import base64, json
+tool = env['llm.tool'].search([('name', '=', 'soynade_speak')], limit=1)
+res = tool.soynade_speak_execute(json.loads(${JSON.stringify(inputs)}))
+att = env['ir.attachment'].browse(res['urls'][0]['attachment_id'])
+open('/tmp/tuto-voice.wav', 'wb').write(base64.b64decode(att.datas))
+att.unlink()
+env.cr.commit()
+print("SPOKEN:" + res['output_data']['spoken_text'])
+`).split("\n").find((l) => l.startsWith("SPOKEN:"))?.slice(7) || "";
+        execFileSync("docker", ["compose", "cp", "odoo:/tmp/tuto-voice.wav", raw], { cwd: DEV_DIR });
+        // Trailing silence would hold the next caption back for nothing.
+        execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", raw, "-af",
+            "areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse", "-ar", "48000", "-ac", "1", out]);
+        fs.rmSync(raw);
+        const seconds = audioDuration(out);
+        if (seconds <= spoken.length * 0.1 + 1.5) {
+            fs.writeFileSync(path.join(dir, `${key}.txt`), `FR: ${spokenText(frText)}\nWO: ${spoken}\nseed: ${seed}\n`);
+            return out;
+        }
+        console.log(`rejected ${seconds.toFixed(1)} s take (seed ${seed}) for: ${spoken}`);
+        fs.rmSync(out);
+    }
+    throw new Error(`No usable Wolof take for: ${frText}`);
+}
+
+/** Starts a recorded session. `finish()` writes public/editeur/<name>.mp4.
+ *  `voiceOver: { say, overrides }` adds a Wolof voice-over, one line per caption.
+ *  `say` maps a caption to simpler French to translate (Soynade's Wolof
+ *  translation fails on longer phrasings); `overrides` to an audio file. */
+export async function startClip(name, { storageState, env, audio = false, viewport = VIEWPORT, voiceOver } = {}) {
     const tmp = fs.mkdtempSync("/tmp/tuto-");
     const browser = await chromium.launch({
         channel: "chrome",
@@ -157,6 +220,12 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
     const page = await context.newPage();
     const started = Date.now();
     const marks = [];
+    const voice = voiceOver
+        ? { started, cues: [], busyUntil: 0, overrides: voiceOver.overrides || {}, say: voiceOver.say || {} }
+        : null;
+    if (voice) {
+        VOICE.set(page, voice);
+    }
     return {
         page,
         context,
@@ -171,6 +240,9 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
             }
         },
         async finish({ trimStart = 0 } = {}) {
+            if (voice && voice.busyUntil > Date.now()) {
+                await page.waitForTimeout(voice.busyUntil - Date.now());
+            }
             const video = page.video();
             await context.close();
             await browser.close();
@@ -193,6 +265,37 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
             execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", await video.path(),
                 "-filter_complex", graph, "-map", "[v]", "-c:v", "libx264", "-preset", "slow", "-crf", "30",
                 "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", out]);
+            if (voice?.cues.length) {
+                // Each line at its caption's time on the final (retimed) timeline.
+                const outputTime = (at) => {
+                    let o = 0;
+                    let from = trimStart;
+                    for (const m of cuts) {
+                        if (at <= m.start) {
+                            return o + Math.max(0, at - from);
+                        }
+                        o += m.start - from;
+                        if (at <= m.end) {
+                            return o + (at - m.start) / m.factor;
+                        }
+                        o += (m.end - m.start) / m.factor;
+                        from = m.end;
+                    }
+                    return o + Math.max(0, at - from);
+                };
+                const silent = path.join(tmp, "silent.mp4");
+                fs.renameSync(out, silent);
+                const inputs = voice.cues.flatMap((c) => ["-i", c.file]);
+                const delays = voice.cues.map((c, i) => {
+                    const ms = Math.round(outputTime(c.at) * 1000);
+                    return `[${i + 1}:a]aformat=sample_rates=48000:channel_layouts=mono,adelay=${ms}:all=1[a${i}]`;
+                });
+                const mix = `${delays.join(";")};${voice.cues.map((_, i) => `[a${i}]`).join("")}`
+                    + `amix=inputs=${voice.cues.length}:normalize=0:duration=longest,apad[a]`;
+                execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", silent, ...inputs,
+                    "-filter_complex", mix, "-map", "0:v", "-map", "[a]", "-c:v", "copy",
+                    "-c:a", "aac", "-b:a", "96k", "-shortest", "-movflags", "+faststart", out]);
+            }
             fs.rmSync(tmp, { recursive: true, force: true });
             console.log(`${out}  (${((Date.now() - started) / 1000).toFixed(0)} s)`);
             return out;
@@ -213,6 +316,16 @@ function localize(text) {
 }
 
 export async function caption(page, text, holdMs = 0) {
+    const voice = VOICE.get(page);
+    if (voice && text) {
+        // One line at a time: the next caption waits for the current line.
+        if (voice.busyUntil > Date.now()) {
+            await pause(page, voice.busyUntil - Date.now());
+        }
+        const file = voice.overrides[text] || wolofLine(voice.say[text] || text);
+        voice.cues.push({ at: (Date.now() - voice.started) / 1000, file });
+        voice.busyUntil = Date.now() + audioDuration(file) * 1000 + 300;
+    }
     await page.evaluate((t) => window.__tuto?.caption(t), localize(text));
     if (holdMs) {
         await pause(page, holdMs);
