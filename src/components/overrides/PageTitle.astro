@@ -1,0 +1,23 @@
+---
+// Starlight's page title, plus share buttons for the editor tutorial pages.
+import Default from "@astrojs/starlight/components/PageTitle.astro";
+import ShareBar from "../ShareBar.astro";
+
+const { entry } = Astro.locals.starlightRoute;
+const tutorial = /^(fr\/)?editeur(\/|$)/.test(entry.id);
+const fr = entry.id.startsWith("fr/");
+const link = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+---
+
+<Default />
+{tutorial && (
+	<div class="page-share">
+		<ShareBar link={link} title={entry.data.title} fr={fr} label={fr ? "Partager cette page" : "Share this page"} />
+	</div>
+)}
+
+<style>
+	.page-share {
+		margin-top: 0.75rem;
+	}
+</style>

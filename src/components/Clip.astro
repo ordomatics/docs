@@ -2,10 +2,7 @@
 // Tutorial clip from public/editeur/, recorded by scripts/tutorial: silent and
 // looping, or (voice) a clip with a voice-over the reader starts themselves.
 // Each clip has its own anchor, which the share buttons link to.
-import { Icon } from "@astrojs/starlight/components";
-
-// WhatsApp mark from Simple Icons (CC0); Starlight's icon set has no WhatsApp.
-const WHATSAPP = "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z";
+import ShareBar from "./ShareBar.astro";
 
 interface Props {
 	src: string;
@@ -21,17 +18,6 @@ const fr = Astro.url.pathname.startsWith("/fr/");
 // preview image for social apps, then sends people on to #id here.
 const link = new URL(`/v/${fr ? "fr" : "en"}/${name}/`, Astro.site ?? Astro.url).href;
 const title = caption ?? (fr ? "Tutoriel de l'éditeur Smartacus" : "Smartacus editor tutorial");
-const text = encodeURIComponent(`${title} — ${link}`);
-const url = encodeURIComponent(link);
-const t = fr
-	? { share: "Partager", on: "Partager sur", copy: "Copier le lien", copied: "Lien copié", label: "Partager cette vidéo" }
-	: { share: "Share", on: "Share on", copy: "Copy link", copied: "Link copied", label: "Share this video" };
-const networks = [
-	{ name: "WhatsApp", color: "#25D366", href: `https://wa.me/?text=${text}` },
-	{ name: "Facebook", icon: "facebook", color: "#0866FF", href: `https://www.facebook.com/sharer/sharer.php?u=${url}` },
-	{ name: "X", icon: "x.com", color: "var(--sl-color-white)", href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${url}` },
-	{ name: "LinkedIn", icon: "linkedin", color: "#0A66C2", href: `https://www.linkedin.com/sharing/share-offsite/?url=${url}` },
-] as const;
 ---
 
 <figure class="clip" id={id}>
@@ -41,54 +27,8 @@ const networks = [
 		<video src={`/editeur/${src}`} autoplay loop muted playsinline controls preload="metadata"></video>
 	)}
 	{caption && <figcaption>{caption}</figcaption>}
-	<div class="clip-share" role="group" aria-label={t.label} data-link={link} data-title={title}>
-		<span class="clip-share-label">{t.share}</span>
-		{networks.map((n) => (
-			<a href={n.href} target="_blank" rel="noopener noreferrer" title={`${t.on} ${n.name}`}
-				aria-label={`${t.on} ${n.name}`} style={`--brand: ${n.color}`}>
-				{"icon" in n ? (
-					<Icon name={n.icon} size="1.1rem" />
-				) : (
-					<svg viewBox="0 0 24 24" width="1.1rem" height="1.1rem" fill="currentColor" aria-hidden="true"><path d={WHATSAPP} /></svg>
-				)}
-			</a>
-		))}
-		<button type="button" class="clip-share-copy" title={t.copy} aria-label={t.copy} data-copied={t.copied}>
-			<Icon name="link" size="1.1rem" />
-		</button>
-		<button type="button" class="clip-share-native" title={t.share} aria-label={t.share} hidden>
-			<svg viewBox="0 0 24 24" width="1.1rem" height="1.1rem" fill="none" stroke="currentColor" stroke-width="2"
-				stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" />
-				<circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>
-		</button>
-		<span class="clip-share-status" role="status"></span>
-	</div>
+	<ShareBar link={link} title={title} fr={fr} label={fr ? "Partager cette vidéo" : "Share this video"} />
 </figure>
-
-<script>
-	// The native share sheet only where the browser offers one (mostly phones).
-	for (const bar of document.querySelectorAll<HTMLElement>(".clip-share")) {
-		const link = bar.dataset.link!;
-		const native = bar.querySelector<HTMLButtonElement>(".clip-share-native")!;
-		if (navigator.share) {
-			native.hidden = false;
-			native.addEventListener("click", () => {
-				navigator.share({ title: bar.dataset.title, url: link }).catch(() => {});
-			});
-		}
-		const copy = bar.querySelector<HTMLButtonElement>(".clip-share-copy")!;
-		const status = bar.querySelector<HTMLElement>(".clip-share-status")!;
-		copy.addEventListener("click", async () => {
-			try {
-				await navigator.clipboard.writeText(link);
-				status.textContent = copy.dataset.copied!;
-			} catch {
-				prompt("", link);
-			}
-			setTimeout(() => (status.textContent = ""), 2000);
-		});
-	}
-</script>
 
 <style>
 	.clip {
@@ -104,48 +44,5 @@ const networks = [
 		margin-top: 0.4rem;
 		font-size: var(--sl-text-sm);
 		color: var(--sl-color-gray-3);
-	}
-	.clip-share {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.35rem;
-		margin-top: 0.5rem;
-	}
-	.clip-share-label,
-	.clip-share-status {
-		font-size: var(--sl-text-xs);
-		color: var(--sl-color-gray-3);
-	}
-	.clip-share-label {
-		margin-right: 0.15rem;
-	}
-	.clip-share a,
-	.clip-share button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 50%;
-		background: transparent;
-		color: var(--sl-color-gray-2);
-		cursor: pointer;
-		transition: color 0.15s, border-color 0.15s;
-	}
-	.clip-share a:hover,
-	.clip-share a:focus-visible {
-		color: var(--brand);
-		border-color: var(--brand);
-	}
-	.clip-share button:hover,
-	.clip-share button:focus-visible {
-		color: var(--sl-color-accent-high);
-		border-color: var(--sl-color-accent);
-	}
-	.clip-share [hidden] {
-		display: none;
 	}
 </style>

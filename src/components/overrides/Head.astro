@@ -1,0 +1,24 @@
+---
+// Starlight's <head>, plus a social preview image for the editor tutorial pages
+// (cards made by scripts/tutorial/page-cards.mjs). Starlight already sets the
+// title, description and a large-image Twitter card, but no image.
+import Default from "@astrojs/starlight/components/Head.astro";
+
+const { entry } = Astro.locals.starlightRoute;
+const match = entry.id.match(/^(fr\/)?editeur(?:\/(.+))?$/);
+const slug = match ? (match[2] ?? "index") : null;
+const image = slug
+	? new URL(`/editeur/${match![1] ? "" : "en/"}og/page-${slug}.jpg`, Astro.site ?? Astro.url).href
+	: null;
+---
+
+<Default />
+{image && (
+	<>
+		<meta property="og:image" content={image} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={entry.data.title} />
+		<meta name="twitter:image" content={image} />
+	</>
+)}
