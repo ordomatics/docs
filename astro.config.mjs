@@ -15,10 +15,12 @@ export default defineConfig({
         "Documentation for Ordomatics — a full Odoo 18 ERP you run over WhatsApp.",
       // English is the default; French pages live under /fr/. A page with no
       // French translation falls back to English rather than 404ing.
-      // Social preview image + share buttons on the editor tutorial pages.
+      // Editor tutorial pages: social preview image, share bar at the bottom and
+      // in the desktop "On this page" column.
       components: {
         Head: "./src/components/overrides/Head.astro",
-        PageTitle: "./src/components/overrides/PageTitle.astro",
+        Footer: "./src/components/overrides/Footer.astro",
+        TableOfContents: "./src/components/overrides/TableOfContents.astro",
       },
       defaultLocale: "root",
       locales: {

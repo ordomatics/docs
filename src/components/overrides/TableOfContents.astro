@@ -1,0 +1,17 @@
+---
+// Starlight's "On this page" list (desktop right column only; phones use a
+// separate dropdown), with the tutorial page's share bar underneath.
+import Default from "@astrojs/starlight/components/TableOfContents.astro";
+import PageShare from "../PageShare.astro";
+---
+
+<Default />
+<PageShare class="page-share-sidebar" />
+
+<style>
+	:global(.page-share-sidebar) {
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--sl-color-hairline);
+	}
+</style>

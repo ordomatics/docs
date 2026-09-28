@@ -1,0 +1,17 @@
+---
+// Starlight's footer, with the tutorial page's share bar just above the
+// previous/next links: shared once the page has been read.
+import Default from "@astrojs/starlight/components/Footer.astro";
+import PageShare from "../PageShare.astro";
+---
+
+<PageShare class="page-share-bottom" />
+<Default />
+
+<style>
+	:global(.page-share-bottom) {
+		margin-top: 2.5rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--sl-color-hairline);
+	}
+</style>
