@@ -17,6 +17,13 @@ const CODE = env.TUTORIAL_DEMO_CODE;
 function resetDemoAccount() {
     odooShell(`
 users = env['res.users'].with_context(active_test=False).search([('login', '=', '${EMAIL}')])
+# Everything the recordings attach to the demo user, so it can be deleted and signed up again.
+env['llm.thread'].sudo().with_context(active_test=False).search([('user_id', 'in', users.ids)]).unlink()
+accounts = env['affiliate.account'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+env['affiliate.commission'].sudo().search([('affiliate_id', 'in', accounts.ids)]).unlink()
+env['affiliate.referral'].sudo().search([('affiliate_id', 'in', accounts.ids)]).unlink()
+env['payment.transaction'].sudo().search([('partner_id.name', '=', 'Cliente parrainée (exemple)')]).unlink()
+accounts.unlink()
 users.sudo().unlink()
 env['smartacus.otp'].sudo().search([('identity_key', '=', '${EMAIL}')]).unlink()
 env.cr.commit()

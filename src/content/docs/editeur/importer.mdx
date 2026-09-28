@@ -1,0 +1,87 @@
+---
+title: "4. Importing and extracting a document"
+description: Import a PDF, a scan or a photo, then extract its text to edit it.
+sidebar:
+  order: 4
+---
+
+import Clip from "../../../components/Clip.astro";
+
+You can start from an existing document: a PDF received by e-mail, a scanned
+letter, or a photo of an invoice taken with a phone. The editor extracts its
+text, which you then edit like any other document.
+
+:::tip[Try it with our samples]
+Download these fictional documents (in French) to follow the steps:
+[PDF invoice](/editeur/exemples/facture-atelier-couture.pdf),
+[scanned letter](/editeur/exemples/convocation-scannee.pdf),
+[photo of a quote](/editeur/exemples/devis-photo.jpg).
+:::
+
+## 4.1 Import
+
+1. Click **Importer** (Import) in the ribbon (or in **Mes fichiers**).
+2. Choose the file: **PDF**, **image** (JPG, PNG, TIFF, BMP, WebP) or text
+   (HTML, TXT).
+3. The document opens **as is**, in its original view.
+
+The file is stored in the folder selected in **Mes fichiers**.
+
+## 4.2 Extract the text (the Modifier button)
+
+Click **Modifier** (Edit — the pencil): the editor turns the document into
+editable text, with its headings, lists and tables. What happens depends on
+the document.
+
+### A PDF that already contains text
+
+This is the case for PDFs created on a computer (invoices, letters generated
+by software). The text is extracted **instantly and for free**.
+
+<Clip src="en/4-1-importer-un-pdf.mp4" caption="Importing a PDF invoice and extracting it" />
+
+### A scanned document
+
+A scan is only an image: artificial intelligence **reads each page**. Progress
+is shown at the bottom of the screen (*Extraction en cours… page 1/2*). You can
+keep working elsewhere or close the page: extraction carries on, and the text
+will be waiting when you come back.
+
+<Clip src="en/4-2-extraire-un-scan.mp4" caption="A two-page scanned letter (wait sped up)" />
+
+### A photo taken with a phone
+
+A photo is imported and extracted like a scan, **tables included**.
+
+<Clip src="en/4-3-extraire-une-photo.mp4" caption="The photo of a quote, table included (wait sped up)" />
+
+For a good result:
+
+- photograph the sheet **flat**, well lit, with no shadow or glare;
+- frame the whole page, and keep the phone's **full resolution** (avoid
+  photos compressed by a messaging app);
+- for a multi-page document, gather the pages into a single PDF before
+  importing it, or import each page separately.
+
+:::caution[Check amounts and references]
+Reading a scan or a photo can go wrong, especially on a blurry or small photo:
+one misread digit changes an amount. Compare every amount, date and number
+(NINEA, invoice, ID document) with the original document.
+:::
+
+💳 Extracting a scan or a photo is charged by the number of words extracted,
+once only: reopening the document afterwards is free. A document can have up
+to 50 pages.
+
+## 4.3 Check and correct
+
+To compare with the original document, switch to **Aperçu** (Preview) and
+choose the **Original** view in the status bar (see [part
+5](/editeur/apercu/)). Then correct the text with the keyboard, by dictation
+([part 2](/editeur/voix/)) or with Copilot ([part 3](/editeur/ia/)).
+
+:::note[Images are not carried over yet]
+Logos, stamps, signatures and photos in a scan are not carried over into the
+extracted text. You can insert them again with **Insérer une image** (Insert
+an image).
+:::

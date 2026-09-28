@@ -9,7 +9,11 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DOCS = path.resolve(HERE, "../..");
-export const VIDEO_DIR = path.join(DOCS, "public/editeur");
+// TUTO_LANG=en records the English clips: captions from captions.en.json,
+// videos under public/editeur/en/ (screenshots have no captions and are shared).
+export const LANG = process.env.TUTO_LANG === "en" ? "en" : "fr";
+const EN_CAPTIONS = LANG === "en" ? JSON.parse(fs.readFileSync(path.join(HERE, "captions.en.json"), "utf8")) : {};
+export const VIDEO_DIR = path.join(DOCS, "public/editeur", LANG === "en" ? "en" : "");
 export const IMAGE_DIR = path.join(DOCS, "src/assets/editeur");
 export const BASE_URL = process.env.EDITOR_URL || "http://localhost:8069";
 export const DEV_DIR = process.env.SMARTACUS_DEV_DIR
@@ -198,8 +202,18 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
 
 export const pause = (page, ms) => page.waitForTimeout(ms);
 
+function localize(text) {
+    if (!text || LANG === "fr") {
+        return text;
+    }
+    if (!(text in EN_CAPTIONS)) {
+        throw new Error(`No English caption for: ${text}`);
+    }
+    return EN_CAPTIONS[text];
+}
+
 export async function caption(page, text, holdMs = 0) {
-    await page.evaluate((t) => window.__tuto?.caption(t), text);
+    await page.evaluate((t) => window.__tuto?.caption(t), localize(text));
     if (holdMs) {
         await pause(page, holdMs);
     }
@@ -256,6 +270,9 @@ export async function annotate(page, entries) {
 
 /** Saves src/assets/editeur/<name>.png, without cursor or caption. */
 export async function screenshot(page, name, { clip } = {}) {
+    if (LANG === "en") {
+        return; // the French screenshots are shared
+    }
     fs.mkdirSync(IMAGE_DIR, { recursive: true });
     await page.evaluate(() => {
         for (const id of ["tuto-cursor", "tuto-caption"]) {

@@ -1,0 +1,59 @@
+---
+title: "5. Preview and export"
+description: See the document as it will be printed, compare it with the original, then export it to PDF, image or Word.
+sidebar:
+  order: 5
+---
+
+import Clip from "../../../components/Clip.astro";
+
+## 5.1 Switch to preview
+
+Click **Aperçu** (Preview — the eye) in the toolbar: the document is shown as
+it will be printed, page by page. Click **Modifier** (Edit — the pencil) to go
+back to writing.
+
+<Clip src="en/5-1-apercu.mp4" caption="From writing to preview, and back" />
+
+The standard preview is **free**. The **Aperçu IA** (AI preview) option (in
+the [settings](/editeur/compte/#04-settings)) asks artificial intelligence to
+rebuild the document's layout, as close as possible to the original for an
+imported document; it is charged for each new preview.
+
+## 5.2 The two views: Original and PDF
+
+For an imported document (PDF, scan or photo), the status bar offers two views
+in preview mode:
+
+- **PDF**: your version, with your changes;
+- **Original**: the document as you imported it.
+
+<Clip src="en/5-2-original-et-pdf.mp4" caption="Comparing the extraction of a photo with the original" />
+
+Switch between them to check the extraction line by line, especially amounts
+and references.
+
+## 5.3 Export
+
+The **Exporter** (Export) button in the ribbon offers the formats that suit
+the current mode:
+
+| Mode | Formats | Credits |
+|---|---|---|
+| **Aperçu** (Preview) | **PDF (.pdf)** and **Image (.png)**, identical to the preview | free |
+| **Modifier** (Edit) | **Word (.docx)**, to continue in a word processor | a small fixed amount |
+
+<Clip src="en/5-3-exporter.mp4" caption="Exporting a PDF from the preview, then the Word option in edit mode" />
+
+A greyed-out format isn't available in the current mode: hover over it to see
+which mode to switch to.
+
+![The Exporter menu in preview mode: PDF and Image available, Word greyed out](../../../assets/editeur/5-3-exporter-apercu.png)
+
+![The Exporter menu in edit mode: only Word is available](../../../assets/editeur/5-3-exporter-modifier.png)
+
+:::note[Imported documents]
+In preview mode, **Exporter** directly downloads the PDF version of your
+document (or the original file if no preview has been generated yet). For a
+Word export, switch back to **Modifier** mode.
+:::
