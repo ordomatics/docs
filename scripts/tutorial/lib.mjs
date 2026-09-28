@@ -69,7 +69,7 @@ const OVERLAY = () => {
         caption.id = "tuto-caption";
         document.documentElement.appendChild(caption);
         // Chrome's red spell-check squiggles on French text distract in clips.
-        const noSpellcheck = () => document.querySelectorAll("[contenteditable]").forEach((el) => {
+        const noSpellcheck = () => document.querySelectorAll("[contenteditable], textarea, input").forEach((el) => {
             el.spellcheck = false;
         });
         new MutationObserver(noSpellcheck).observe(document.documentElement, { childList: true, subtree: true });
