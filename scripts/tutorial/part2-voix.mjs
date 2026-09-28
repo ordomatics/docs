@@ -1,5 +1,5 @@
 // Partie 2 : Écrire et relire à la voix. Run with `node part2-voix.mjs [clip...]`.
-import { caption, click, highlight, pause, playIntoMic, soynadeVoice, startClip, withVirtualMic } from "./lib.mjs";
+import { SILENT_TTS, caption, click, highlight, pause, playIntoMic, soynadeVoice, startClip, withVirtualMic } from "./lib.mjs";
 import { AUTH, LETTER_HTML, openDocument, openEditor, resetWorkspace, seedDocument } from "./demo.mjs";
 
 const FOLDER = "Démarches";
@@ -7,30 +7,6 @@ const DOC = "Demande d'acte de naissance";
 const DICTATED = "Vous trouverez ci-joint une copie de ma carte nationale d'identité.";
 
 const paragraph = (page, text) => page.locator(".ProseMirror p").filter({ hasText: text }).first();
-
-// Chrome on Linux would speak through the machine's speakers while recording,
-// and the clip is silent anyway. This stand-in fires the same start/end events
-// at a normal speaking pace; the app's own timed highlighting does the rest,
-// exactly as with the real Linux voice (which reports no word boundaries).
-const SILENT_TTS = () => {
-    let timer = null;
-    let current = null;
-    window.speechSynthesis.speak = (utterance) => {
-        current = utterance;
-        setTimeout(() => {
-            utterance.onstart?.(new Event("start"));
-            timer = setTimeout(() => utterance.onend?.(new Event("end")), (utterance.text.length / 17) * 1000);
-        }, 150);
-    };
-    window.speechSynthesis.cancel = () => {
-        clearTimeout(timer);
-        if (current) {
-            const done = current;
-            current = null;
-            setTimeout(() => done.onend?.(new Event("end")), 0);
-        }
-    };
-};
 
 const clips = {
     // 2.1 Dicter

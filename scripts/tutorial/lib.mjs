@@ -332,3 +332,27 @@ export async function withVirtualMic(fn) {
         loop.kill();
     }
 }
+
+// Chrome on Linux would speak through the machine's speakers while recording,
+// and the clip is silent anyway. This stand-in fires the same start/end events
+// at a normal speaking pace; the app's own timed highlighting does the rest,
+// exactly as with the real Linux voice (which reports no word boundaries).
+export const SILENT_TTS = () => {
+    let timer = null;
+    let current = null;
+    window.speechSynthesis.speak = (utterance) => {
+        current = utterance;
+        setTimeout(() => {
+            utterance.onstart?.(new Event("start"));
+            timer = setTimeout(() => utterance.onend?.(new Event("end")), (utterance.text.length / 17) * 1000);
+        }, 150);
+    };
+    window.speechSynthesis.cancel = () => {
+        clearTimeout(timer);
+        if (current) {
+            const done = current;
+            current = null;
+            setTimeout(() => done.onend?.(new Event("end")), 0);
+        }
+    };
+};
