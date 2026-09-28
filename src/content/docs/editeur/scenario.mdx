@@ -21,12 +21,14 @@ which he scanned. In a few minutes, he updates it and exports it.
 | Salaamaaleykum, tey nag ñu wan leen ni sunu éditeur Smartacus di doxee | Salam aleykum, today we'll show you how our Smartacus editor works |
 | 1. Jokkoo ak sa kont | 1. Log in to your account |
 | 2. Indi bataaxal bi nga scan | 2. Import the scanned letter |
+| Xoolal document bi yëpp | Look through the whole document |
 | Bës ci soppi ngir jàng mbind mi | Click Modifier to read the text |
 | 3. Yokkal benn wax ak sa baat | 3. Add a sentence with your voice |
 | — | « Une collation sera offerte à l'issue de l'assemblée. » (the dictated sentence, in French) |
-| 4. Laaj Copilot mu soppi bésu ndaje mi | 4. Ask Copilot to change the date of the meeting |
-| 5. Tànnal paragraphe bi te déglu ko | 5. Select the paragraph and listen to it |
-| 6. Ubbil aperçu bi, nga jël PDF bi | 6. Open the preview, then download the PDF |
+| 4. Jubbanti mbind mi ak Régénérer | 4. Correct the text with Régénérer |
+| 5. Laaj Copilot mu soppi bésu ndaje mi | 5. Ask Copilot to change the date of the meeting |
+| 6. Tànnal paragraphe bi te déglu ko | 6. Select the paragraph and listen to it |
+| 7. Ubbil xool bi, nga jëli PDF bi | 7. Open the preview, then download the PDF |
 | Jeex na, kayit bi pare na | Done, the document is ready |
 
 The voice-over is generated with **Soynade**, the Wolof speech model Copilot
@@ -38,18 +40,29 @@ uses: its lines are sometimes simpler than the captions.
 
 1. **Log in** from **Mon compte**
    ([part 0](/editeur/compte/#02-log-in-and-log-out)).
-2. **Import** the scanned letter, then click **Modifier** (Edit) to extract
-   its text ([part 4](/editeur/importer/)).
+2. **Import** the scanned letter and **look through it** as it is, scrolling
+   through its pages, then click **Modifier** (Edit) to extract its text
+   ([part 4](/editeur/importer/)).
 3. **Dictate** an addition at the end of a paragraph: *« Une collation sera
    offerte à l'issue de l'assemblée. »* (Refreshments will be served after the
    meeting.) ([part 2](/editeur/voix/#21-dictate)).
-4. **Ask Copilot** to change the date: *« Remplace la date de l'assemblée
+4. **Correct the dictation with Régénérer** (Regenerate): select the dictated
+   paragraph, then click **Régénérer**. The capitals and punctuation that speech
+   recognition leaves out are restored
+   ([part 3](/editeur/ia/#31-regenerate-a-passage)).
+5. **Ask Copilot** to change the date: *« Remplace la date de l'assemblée
    par le samedi 10 octobre 2026 à 9 heures. »* (Change the meeting date to
    Saturday 10 October 2026 at 9 am.) ([part 3](/editeur/ia/)).
-5. **Listen** to the edited paragraph to proofread it
+6. **Listen** to the edited paragraph to proofread it
    ([part 2](/editeur/voix/#22-read-aloud)).
-6. **Switch to preview**, then **export** the PDF
+7. **Switch to preview**, then **export** the PDF
    ([part 5](/editeur/apercu/)).
+
+:::tip[More room for the document]
+When the document is shown as a PDF (right after importing, or in preview),
+collapse **Copilot** and **Mes fichiers** with the buttons at the top right:
+the page then takes the full width. Reopen Copilot when you need it.
+:::
 
 :::tip[Your turn]
 Go through this scenario with our

@@ -75,9 +75,6 @@
  "… et cliquez sur Modifier pour en extraire le texte (attente accélérée)": "… and click « Modifier » to extract its text (wait sped up)",
  "3. Cliquez à la fin d'un paragraphe et dictez un ajout": "3. Click at the end of a paragraph and dictate an addition",
  "🎙️ « Une collation sera offerte à l'issue de l'assemblée. »": "🎙️ “Refreshments will be served after the meeting.” (in French)",
- "4. Demandez à Copilot de changer la date de l'assemblée": "4. Ask Copilot to change the date of the meeting",
- "5. Sélectionnez le paragraphe et faites-le lire à voix haute": "5. Select the paragraph and have it read aloud",
- "6. Passez en Aperçu, puis exportez le PDF": "6. Switch to « Aperçu », then export the PDF",
  "✅ La nouvelle convocation est prête à être imprimée ou envoyée": "✅ The new notice is ready to print or send",
  "Dans « Mon compte », la carte Affiliation vous invite à parrainer": "In « Mon compte », the « Affiliation » card invites you to refer others",
  "Expliquez en quelques mots votre démarche": "Explain your approach in a few words",
@@ -88,5 +85,10 @@
  "Partagez votre lien de parrainage : chaque recharge de vos filleuls vous rapporte une commission": "Share your referral link: every top-up by the people you refer earns you a commission",
  "Le solde payable peut être retiré sur votre compte Wave": "The payable balance can be withdrawn to your Wave account",
  "Indiquez le montant, vérifiez le numéro Wave…": "Enter the amount, check the Wave number…",
- "… puis confirmez : le montant est envoyé par Wave (ici, nous annulons)": "… then confirm: the amount is sent via Wave (here, we cancel)"
+ "… puis confirmez : le montant est envoyé par Wave (ici, nous annulons)": "… then confirm: the amount is sent via Wave (here, we cancel)",
+ "Faites défiler le document importé, tel quel": "Scroll through the imported document, as it is",
+ "4. Sélectionnez le paragraphe dicté et corrigez-le avec Régénérer": "4. Select the dictated paragraph and correct it with « Régénérer » (Regenerate)",
+ "5. Demandez à Copilot de changer la date de l'assemblée": "5. Ask Copilot to change the date of the meeting",
+ "6. Sélectionnez le paragraphe et faites-le lire à voix haute": "6. Select the paragraph and have it read aloud",
+ "7. Passez en Aperçu, puis exportez le PDF": "7. Switch to « Aperçu », then export the PDF"
 }

@@ -16,8 +16,10 @@ export const VOICE_SAY = {
     "2. Importez la convocation scannée de l'an dernier": "2. Importez le courrier scanné",
     "… et cliquez sur Modifier pour en extraire le texte (attente accélérée)": "Cliquez sur Modifier pour lire le texte",
     "3. Cliquez à la fin d'un paragraphe et dictez un ajout": "3. Ajoutez une phrase avec votre voix",
-    "5. Sélectionnez le paragraphe et faites-le lire à voix haute": "5. Sélectionnez le paragraphe et écoutez-le",
-    "6. Passez en Aperçu, puis exportez le PDF": "6. Ouvrez l'aperçu, puis téléchargez le PDF",
+    "Faites défiler le document importé, tel quel": "Regardez tout le document",
+    "4. Sélectionnez le paragraphe dicté et corrigez-le avec Régénérer": "4. Corrigez le texte avec Régénérer",
+    "6. Sélectionnez le paragraphe et faites-le lire à voix haute": "6. Sélectionnez le paragraphe et écoutez-le",
+    "7. Passez en Aperçu, puis exportez le PDF": "7. Ouvrez l'aperçu, puis téléchargez le PDF",
     "✅ La nouvelle convocation est prête à être imprimée ou envoyée": "C'est terminé, le document est prêt",
 };
 // Title card spoken in Wolof before the scenario.
@@ -37,6 +39,32 @@ const INTRO = {
 
 export async function addIntro(clipFile) {
     await prependIntro(clipFile, { ...INTRO[LANG], voice: wolofLine(INTRO.voice) });
+}
+
+/** Collapses Copilot and the files panel: the document gets the full width. */
+async function focusDocument(page) {
+    await collapseCopilot(page);
+    // A collapsed files panel still counts as "visible"; the toggle's "on" state doesn't lie.
+    if (await page.locator("#toggleFiles.on").count()) {
+        await click(page, page.locator("#toggleFiles"), { after: 600 });
+    }
+}
+
+/** Scrolls the imported PDF down to its end and back to the top. */
+async function browseDocument(page) {
+    const view = page.locator(".sa-surface-view").first();
+    const box = await view.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 20 });
+    for (let i = 0; i < 12; i++) {
+        await page.mouse.wheel(0, 260);
+        await pause(page, 320);
+    }
+    await pause(page, 900);
+    for (let i = 0; i < 6; i++) {
+        await page.mouse.wheel(0, -560);
+        await pause(page, 220);
+    }
+    await pause(page, 700);
 }
 
 const paragraph = (page, text) => page.locator(".ProseMirror p").filter({ hasText: text }).first();
@@ -68,7 +96,8 @@ async function run() {
             await click(page, page.locator("#toggleAccount"), { after: 500 });
         }
 
-        // 2. Importer le courrier scanné et extraire son texte
+        // 2. Importer le courrier scanné, le parcourir, puis extraire son texte
+        await focusDocument(page);
         await caption(page, "2. Importez la convocation scannée de l'an dernier");
         const [chooser] = await Promise.all([
             page.waitForEvent("filechooser"),
@@ -76,7 +105,9 @@ async function run() {
         ]);
         await chooser.setFiles(SCAN_PDF);
         await page.locator(".sa-surface-view iframe, .sa-surface-view img").first().waitFor({ timeout: 30000 });
-        await pause(page, 1500);
+        await pause(page, 2000);
+        await caption(page, "Faites défiler le document importé, tel quel");
+        await browseDocument(page);
         await caption(page, "… et cliquez sur Modifier pour en extraire le texte (attente accélérée)");
         await click(page, page.getByTitle("Modifier", { exact: true }), { after: 300 });
         fastForward(8);
@@ -96,8 +127,22 @@ async function run() {
         await page.getByTitle("Dicter (une phrase)").waitFor({ timeout: 15000 });
         await pause(page, 800);
 
-        // 4. Faire modifier la date par Copilot
-        await caption(page, "4. Demandez à Copilot de changer la date de l'assemblée");
+        // 4. Corriger la transcription avec Régénérer
+        await caption(page, "4. Sélectionnez le paragraphe dicté et corrigez-le avec Régénérer");
+        await presence.click({ clickCount: 3 });
+        await pause(page, 600);
+        const regenerate = page.locator("#regenerateBtn");
+        await click(page, regenerate, { after: 300 });
+        await page.locator("#regenerateBtn[disabled]").waitFor({ timeout: 10000 }).catch(() => {});
+        await page.locator("#regenerateBtn:not([disabled])").waitFor({ timeout: 120000 });
+        await pause(page, 600);
+        await highlight(page, presence);
+        await pause(page, 2200);
+        await highlight(page, null);
+
+        // 5. Faire modifier la date par Copilot
+        await click(page, page.locator("#toggleAssistant"), { after: 700 });
+        await caption(page, "5. Demandez à Copilot de changer la date de l'assemblée");
         await type(page, page.getByPlaceholder("Demander à Copilot..."),
             "Remplace la date de l'assemblée par le samedi 10 octobre 2026 à 9 heures.", { delay: 25 });
         await click(page, page.getByTitle("Envoyer"), { after: 300 });
@@ -111,17 +156,17 @@ async function run() {
         await pause(page, 2200);
         await highlight(page, null);
 
-        // 5. Écouter le paragraphe modifié
-        await caption(page, "5. Sélectionnez le paragraphe et faites-le lire à voix haute");
+        // 6. Écouter le paragraphe modifié
+        await caption(page, "6. Sélectionnez le paragraphe et faites-le lire à voix haute");
         await dated.click({ clickCount: 3 });
         await pause(page, 500);
         await click(page, page.getByTitle("Lire à voix haute"), { after: 300 });
         await page.locator(".rb-btn.on[title='Lire à voix haute']").waitFor({ state: "detached", timeout: 60000 });
         await pause(page, 600);
 
-        // 6. Aperçu et export
-        await caption(page, "6. Passez en Aperçu, puis exportez le PDF");
-        await collapseCopilot(page);
+        // 7. Aperçu et export
+        await caption(page, "7. Passez en Aperçu, puis exportez le PDF");
+        await focusDocument(page);
         await click(page, page.getByTitle("Aperçu", { exact: true }), { after: 300 });
         await page.getByTitle("Modifier", { exact: true }).waitFor({ timeout: 120000 });
         await pause(page, 2500);
