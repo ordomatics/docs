@@ -1,0 +1,72 @@
+---
+// One share page per tutorial video: social apps build a link preview from the
+// page's meta tags and ignore the #anchor, so each video needs its own URL.
+// Crawlers read the tags below; people are sent on to the video on its page.
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+	const paths = [];
+	for (const entry of await getCollection("docs")) {
+		const lang = entry.id.startsWith("fr/") ? "fr" : "en";
+		for (const tag of entry.body?.match(/<Clip\b[^>]*\/>/g) ?? []) {
+			const src = tag.match(/\bsrc="([^"]+)"/)?.[1];
+			if (!src) {
+				continue;
+			}
+			const name = src.split("/").pop()!.replace(/\.mp4$/, "");
+			paths.push({
+				params: { lang, clip: name },
+				props: {
+					src,
+					caption: tag.match(/\bcaption="([^"]+)"/)?.[1],
+					pageTitle: entry.data.title,
+					target: `/${entry.id.replace(/\/index$/, "")}/#clip-${name}`,
+				},
+			});
+		}
+	}
+	return paths;
+}
+
+const { lang } = Astro.params;
+const { src, caption, pageTitle, target } = Astro.props;
+const site = Astro.site!;
+const fr = lang === "fr";
+const title = caption ?? pageTitle;
+const description = fr
+	? `${pageTitle} — tutoriel vidéo de l'éditeur Smartacus`
+	: `${pageTitle} — Smartacus editor video tutorial`;
+const image = new URL(`/editeur/${src.replace(/([^/]+)\.mp4$/, "og/$1.jpg")}`, site).href;
+const video = new URL(`/editeur/${src}`, site).href;
+const targetUrl = new URL(target, site).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="robots" content="noindex" />
+		<meta property="og:type" content="video.other" />
+		<meta property="og:site_name" content={fr ? "Documentation Ordomatics" : "Ordomatics Docs"} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={Astro.url.href} />
+		<meta property="og:locale" content={fr ? "fr_FR" : "en_US"} />
+		<meta property="og:image" content={image} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={title} />
+		<meta property="og:video" content={video} />
+		<meta property="og:video:type" content="video/mp4" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={image} />
+		<script is:inline define:vars={{ targetUrl }}>location.replace(targetUrl);</script>
+	</head>
+	<body>
+		<p><a href={targetUrl}>{fr ? "Voir la vidéo" : "Watch the video"} : {title}</a></p>
+	</body>
+</html>

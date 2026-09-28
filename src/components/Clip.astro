@@ -14,9 +14,12 @@ interface Props {
 }
 const { src, caption, voice = false } = Astro.props;
 
-const id = `clip-${src.split("/").pop()!.replace(/\.mp4$/, "")}`;
-const link = new URL(`${Astro.url.pathname}#${id}`, Astro.site ?? Astro.url).href;
+const name = src.split("/").pop()!.replace(/\.mp4$/, "");
+const id = `clip-${name}`;
 const fr = Astro.url.pathname.startsWith("/fr/");
+// Shared as the video's own page (src/pages/v/…): it carries this video's
+// preview image for social apps, then sends people on to #id here.
+const link = new URL(`/v/${fr ? "fr" : "en"}/${name}/`, Astro.site ?? Astro.url).href;
 const title = caption ?? (fr ? "Tutoriel de l'éditeur Smartacus" : "Smartacus editor tutorial");
 const text = encodeURIComponent(`${title} — ${link}`);
 const url = encodeURIComponent(link);
