@@ -63,3 +63,10 @@ export const LETTER_HTML = `<p>Aminata Ndiaye<br>Cité Keur Gorgui, Villa 12<br>
 <p>Ce document m'est demandé pour la constitution de mon dossier de passeport.</p>
 <p>Je vous prie d'agréer, Monsieur l'Officier de l'état civil, l'expression de mes salutations distinguées.</p>
 <p>Aminata Ndiaye</p>`;
+
+/** Collapses the Copilot panel (preview and original views read better full width). */
+export async function collapseCopilot(page) {
+    if (await page.locator("#assistantPanel").isVisible()) {
+        await click(page, page.locator("#collapseAssistant"), { after: 600 });
+    }
+}

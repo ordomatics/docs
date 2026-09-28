@@ -1,0 +1,88 @@
+---
+title: "4. Importer et extraire un document"
+description: Importer un PDF, un scan ou une photo, puis en extraire le texte pour le modifier.
+sidebar:
+  order: 4
+---
+
+import Clip from "../../../../components/Clip.astro";
+
+Vous pouvez partir d'un document existant : un PDF reçu par e-mail, un
+courrier scanné ou la photo d'une facture prise au téléphone. L'éditeur en
+extrait le texte, que vous modifiez ensuite comme n'importe quel document.
+
+:::tip[Essayez avec nos exemples]
+Téléchargez ces documents fictifs pour suivre les étapes :
+[facture en PDF](/editeur/exemples/facture-atelier-couture.pdf),
+[courrier scanné](/editeur/exemples/convocation-scannee.pdf),
+[photo d'un devis](/editeur/exemples/devis-photo.jpg).
+:::
+
+## 4.1 Importer
+
+1. Cliquez sur **Importer** dans le ruban (ou dans **Mes fichiers**).
+2. Choisissez le fichier : **PDF**, **image** (JPG, PNG, TIFF, BMP, WebP) ou
+   texte (HTML, TXT).
+3. Le document s'ouvre **tel quel**, dans sa vue d'origine.
+
+Le fichier est rangé dans le dossier sélectionné dans **Mes fichiers**.
+
+## 4.2 Extraire le texte (bouton Modifier)
+
+Cliquez sur **Modifier** (le crayon) : l'éditeur transforme le document en
+texte modifiable, avec ses titres, ses listes et ses tableaux. Ce qui se passe
+dépend du document.
+
+### Un PDF qui contient déjà du texte
+
+C'est le cas des PDF créés sur ordinateur (factures, courriers générés par un
+logiciel). Le texte est extrait **aussitôt et gratuitement**.
+
+<Clip src="4-1-importer-un-pdf.mp4" caption="Importer une facture en PDF et l'extraire" />
+
+### Un document scanné
+
+Un scan n'est qu'une image : l'intelligence artificielle **lit chaque page**.
+La progression s'affiche en bas de l'écran (*Extraction en cours… page 1/2*).
+Vous pouvez continuer à travailler ailleurs ou fermer la page : l'extraction se
+poursuit, et le texte vous attend à votre retour.
+
+<Clip src="4-2-extraire-un-scan.mp4" caption="Un courrier scanné de deux pages (attente accélérée)" />
+
+### Une photo prise au téléphone
+
+Une photo s'importe et s'extrait comme un scan, **tableaux compris**.
+
+<Clip src="4-3-extraire-une-photo.mp4" caption="La photo d'un devis, tableau compris (attente accélérée)" />
+
+Pour un bon résultat :
+
+- photographiez la feuille **à plat**, bien éclairée, sans ombre ni reflet ;
+- cadrez la page entière, et gardez la **pleine résolution** du téléphone
+  (évitez les photos compressées par une messagerie) ;
+- pour un document de plusieurs pages, rassemblez les pages dans un seul PDF
+  avant de l'importer, ou importez chaque page séparément.
+
+:::caution[Vérifiez les montants et les références]
+La lecture d'un scan ou d'une photo peut se tromper, surtout sur une photo
+floue ou de petite taille : un chiffre mal lu change un montant. Comparez
+chaque montant, date et numéro (NINEA, facture, pièce d'identité) avec le
+document d'origine.
+:::
+
+💳 L'extraction d'un scan ou d'une photo est facturée selon le nombre de mots
+extraits, une seule fois : rouvrir le document ensuite est gratuit. Un document
+peut compter jusqu'à 50 pages.
+
+## 4.3 Vérifier et corriger
+
+Pour comparer avec le document d'origine, passez en **Aperçu** et choisissez
+la vue **Original** dans la barre d'état (voir la [partie
+5](/fr/editeur/apercu/)). Corrigez ensuite le texte au clavier, par la dictée
+([partie 2](/fr/editeur/voix/)) ou avec Copilot ([partie 3](/fr/editeur/ia/)).
+
+:::note[Les images ne sont pas encore reprises]
+Les logos, cachets, signatures et photos présents dans un scan ne sont pas
+repris dans le texte extrait. Vous pouvez les réinsérer avec **Insérer une
+image**.
+:::

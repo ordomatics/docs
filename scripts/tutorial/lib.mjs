@@ -152,9 +152,20 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
     await context.addInitScript(OVERLAY);
     const page = await context.newPage();
     const started = Date.now();
+    const marks = [];
     return {
         page,
         context,
+        /** Marks a stretch (e.g. waiting on the AI) to play `factor`x faster. */
+        fastForward(factor = 8) {
+            const at = (Date.now() - started) / 1000;
+            const open = marks.at(-1);
+            if (open && open.end === undefined) {
+                open.end = at;
+            } else {
+                marks.push({ start: at, factor });
+            }
+        },
         async finish({ trimStart = 0 } = {}) {
             const video = page.video();
             await context.close();
@@ -164,8 +175,19 @@ export async function startClip(name, { storageState, env, audio = false, viewpo
             }
             fs.mkdirSync(VIDEO_DIR, { recursive: true });
             const out = path.join(VIDEO_DIR, `${name}.mp4`);
-            execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-ss", String(trimStart), "-i", await video.path(),
-                "-vf", "scale=1280:-2,fps=25", "-c:v", "libx264", "-preset", "slow", "-crf", "30",
+            // Sped-up stretches: split the timeline and retime those parts.
+            const cuts = marks.filter((m) => m.end !== undefined);
+            const parts = [];
+            let t = trimStart;
+            for (const m of cuts) {
+                parts.push(`[0:v]trim=${t}:${m.start},setpts=PTS-STARTPTS[p${parts.length}]`);
+                parts.push(`[0:v]trim=${m.start}:${m.end},setpts=(PTS-STARTPTS)/${m.factor}[p${parts.length}]`);
+                t = m.end;
+            }
+            parts.push(`[0:v]trim=start=${t},setpts=PTS-STARTPTS[p${parts.length}]`);
+            const graph = `${parts.join(";")};${parts.map((_, i) => `[p${i}]`).join("")}concat=n=${parts.length}:v=1:a=0,scale=1280:-2,fps=25[v]`;
+            execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", await video.path(),
+                "-filter_complex", graph, "-map", "[v]", "-c:v", "libx264", "-preset", "slow", "-crf", "30",
                 "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", out]);
             fs.rmSync(tmp, { recursive: true, force: true });
             console.log(`${out}  (${((Date.now() - started) / 1000).toFixed(0)} s)`);
