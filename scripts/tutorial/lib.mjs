@@ -439,6 +439,51 @@ env.cr.commit()
     return out;
 }
 
+const LOGO = path.join(DEV_DIR, "addons/smartacus/smartacus_editor/static/src/img/logo.png");
+
+/**
+ * Prepends a title card to a finished clip: logo, title and subtitle on screen
+ * while `voice` (an audio file) plays, fading in and out, then the clip.
+ */
+export async function prependIntro(clipFile, { title, subtitle, note, voice }) {
+    const tmp = fs.mkdtempSync("/tmp/tuto-intro-");
+    const card = path.join(tmp, "card.png");
+    const logo = `data:image/png;base64,${fs.readFileSync(LOGO).toString("base64")}`;
+    const browser = await chromium.launch({ channel: "chrome" });
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    await page.setContent(`<!doctype html><meta charset="utf-8"><body style="margin:0;height:100vh;display:flex;
+        flex-direction:column;align-items:center;justify-content:center;gap:22px;
+        background:linear-gradient(160deg,#ffffff 0%,#e6f0ff 100%);font-family:system-ui,sans-serif;color:#111827">
+        <img src="${logo}" style="width:120px;height:120px;border-radius:26px;box-shadow:0 10px 30px rgba(37,100,235,.25)">
+        <div style="font-size:52px;font-weight:800;letter-spacing:-.5px">${title}</div>
+        <div style="font-size:26px;color:#374151;max-width:900px;text-align:center;line-height:1.35">${subtitle}</div>
+        <div style="margin-top:18px;font-size:17px;color:#2564eb;font-weight:600">${note}</div></body>`);
+    await page.screenshot({ path: card });
+    await browser.close();
+
+    const seconds = (0.6 + audioDuration(voice) + 1.0).toFixed(2);
+    const intro = path.join(tmp, "intro.mp4");
+    execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-loop", "1", "-t", seconds, "-i", card, "-i", voice,
+        "-filter_complex", `[0:v]fps=25,format=yuv420p,fade=in:st=0:d=0.4,fade=out:st=${(seconds - 0.4).toFixed(2)}:d=0.4[v];`
+            + "[1:a]aformat=sample_rates=48000:channel_layouts=mono,adelay=600:all=1,apad[a]",
+        "-map", "[v]", "-map", "[a]", "-t", seconds, "-c:v", "libx264", "-preset", "slow", "-crf", "30",
+        "-c:a", "aac", "-b:a", "96k", intro]);
+    // Re-encoded join: the clip may have no audio track, so give it silence.
+    const hasAudio = execFileSync("ffprobe", ["-v", "error", "-select_streams", "a", "-show_entries", "stream=index",
+        "-of", "csv=p=0", clipFile], { encoding: "utf8" }).trim() !== "";
+    const joined = path.join(tmp, "joined.mp4");
+    const clipAudio = hasAudio ? "[1:a]" : "[s]";
+    execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", intro, "-i", clipFile,
+        ...(hasAudio ? [] : ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=mono"]),
+        "-filter_complex", `${hasAudio ? "" : "[2:a]atrim=0:1[s];"}[1:v]fps=25,format=yuv420p,setsar=1[cv];`
+            + `[0:v]setsar=1[iv];[iv][0:a][cv]${clipAudio}concat=n=2:v=1:a=1[v][a]`,
+        "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "slow", "-crf", "30", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", joined]);
+    fs.copyFileSync(joined, clipFile);
+    fs.rmSync(tmp, { recursive: true, force: true });
+    console.log(`${clipFile}  (+ intro, ${seconds} s)`);
+}
+
 /** Plays a WAV into the PipeWire virtual mic created by withVirtualMic(). */
 export function playIntoMic(wav) {
     return new Promise((resolve) => {

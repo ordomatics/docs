@@ -1,6 +1,7 @@
 // Partie 6 : Scénario complet — one story through the whole editor.
 import {
-    SILENT_TTS, caption, click, devEnv, highlight, pause, playIntoMic, soynadeVoice, startClip, type, withVirtualMic,
+    LANG, SILENT_TTS, caption, click, devEnv, highlight, pause, playIntoMic, prependIntro, soynadeVoice, startClip, type,
+    withVirtualMic, wolofLine,
 } from "./lib.mjs";
 import { collapseCopilot, openEditor, resetWorkspace } from "./demo.mjs";
 import { SCAN_PDF, makeSamples } from "./samples.mjs";
@@ -19,6 +20,25 @@ export const VOICE_SAY = {
     "6. Passez en Aperçu, puis exportez le PDF": "6. Ouvrez l'aperçu, puis téléchargez le PDF",
     "✅ La nouvelle convocation est prête à être imprimée ou envoyée": "C'est terminé, le document est prêt",
 };
+// Title card spoken in Wolof before the scenario.
+const INTRO = {
+    voice: "Salam aleykum, aujourd'hui nous allons vous montrer comment fonctionne notre éditeur Smartacus",
+    fr: {
+        title: "Éditeur Smartacus",
+        subtitle: "Salam aleykum ! Aujourd'hui, nous vous montrons comment fonctionne notre éditeur Smartacus.",
+        note: "🔊 Voix off en wolof",
+    },
+    en: {
+        title: "Smartacus editor",
+        subtitle: "Salam aleykum! Today we'll show you how our Smartacus editor works.",
+        note: "🔊 Wolof voice-over",
+    },
+};
+
+export async function addIntro(clipFile) {
+    await prependIntro(clipFile, { ...INTRO[LANG], voice: wolofLine(INTRO.voice) });
+}
+
 const paragraph = (page, text) => page.locator(".ProseMirror p").filter({ hasText: text }).first();
 
 async function run() {
@@ -112,7 +132,7 @@ async function run() {
         await download.cancel();
         await caption(page, "✅ La nouvelle convocation est prête à être imprimée ou envoyée", 3500);
         await caption(page, null, 400);
-        await finish({ trimStart: 0.5 });
+        await addIntro(await finish({ trimStart: 0.5 }));
     });
 }
 
