@@ -13,6 +13,7 @@ const link = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
 {tutorial && (
 	<div class:list={["page-share", Astro.props.class]}>
-		<ShareBar link={link} title={entry.data.title} fr={fr} label={fr ? "Partager cette page" : "Share this page"} />
+		<ShareBar compact id={Astro.props.class?.split(" ")[0]} link={link} title={entry.data.title} fr={fr}
+			label={fr ? "Partager cette page" : "Share this page"} button={fr ? "Partager cette page" : "Share this page"} />
 	</div>
 )}

@@ -14,11 +14,14 @@ interface Props {
 	fr: boolean;
 	label: string;
 	compact?: boolean;
+	// Needed when one link has several bars on a page (panel ids must differ).
+	id?: string;
+	button?: string;
 }
-const { link, title, fr, label, compact = false } = Astro.props;
+const { link, title, fr, label, compact = false, id, button } = Astro.props;
 const text = encodeURIComponent(`${title} — ${link}`);
 const url = encodeURIComponent(link);
-const panelId = `share-${link.replace(/^https?:\/\/[^/]+/, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`;
+const panelId = id ?? `share-${link.replace(/^https?:\/\/[^/]+/, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`;
 const t = fr
 	? { share: "Partager", on: "Partager sur", copy: "Copier le lien", copied: "Lien copié" }
 	: { share: "Share", on: "Share on", copy: "Copy link", copied: "Link copied" };
@@ -36,7 +39,7 @@ const shareIcon = `<svg viewBox="0 0 24 24" width="1.1rem" height="1.1rem" fill=
 <div class:list={["clip-share", { "is-compact": compact }]} data-link={link} data-title={title}>
 	{compact ? (
 		<button type="button" class="clip-share-toggle" aria-expanded="false" aria-controls={panelId}>
-			<Fragment set:html={shareIcon} /><span>{t.share}</span>
+			<Fragment set:html={shareIcon} /><span>{button ?? t.share}</span>
 		</button>
 	) : (
 		<span class="clip-share-label">{t.share}</span>
