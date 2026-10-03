@@ -5,6 +5,9 @@ sidebar:
   order: 4
 ---
 
+import { Image } from "astro:assets";
+import qrImage from "../../../../assets/editeur/4-1-telephone-qr.png";
+import phoneImage from "../../../../assets/editeur/4-1-telephone-pages.png";
 import Clip from "../../../../components/Clip.astro";
 
 Vous pouvez partir d'un document existant : un PDF reçu par e-mail, un
@@ -20,12 +23,45 @@ Téléchargez ces documents fictifs pour suivre les étapes :
 
 ## 4.1 Importer
 
-1. Cliquez sur **Importer** dans le ruban (ou dans **Mes fichiers**).
+1. Cliquez sur **Importer** dans le ruban, puis **Depuis l'ordinateur** (ou sur
+   le bouton **Importer** de **Mes fichiers**).
 2. Choisissez le fichier : **PDF**, **image** (JPG, PNG, TIFF, BMP, WebP) ou
    texte (HTML, TXT).
 3. Le document s'ouvre **tel quel**, dans sa vue d'origine.
 
 Le fichier est rangé dans le dossier sélectionné dans **Mes fichiers**.
+
+### Avec votre téléphone
+
+Vous avez le document en papier ? Photographiez-le avec votre téléphone, sans
+vous y connecter : les pages arrivent directement dans l'éditeur, sur votre
+ordinateur.
+
+1. Cliquez sur **Importer**, puis **Avec mon téléphone (photo)** (ou sur
+   l'icône de téléphone de **Mes fichiers**). Un code QR s'affiche.
+2. Scannez-le avec l'appareil photo de votre téléphone : une page
+   « Photographier un document » s'ouvre.
+3. Touchez **Photographier une page** pour chaque page (20 au maximum), ou
+   choisissez des photos dans la galerie. Retirez une page ratée avec **×**.
+4. Touchez **Envoyer** : sur l'ordinateur, le document s'ouvre tout seul.
+
+<div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-start">
+  <Image src={qrImage} alt="Le code QR à scanner, sur l'ordinateur" width={300} />
+  <Image src={phoneImage} alt="La page du téléphone, avec deux pages photographiées" width={240} />
+</div>
+
+Plusieurs pages forment **un seul document**. Il s'extrait ensuite comme un
+scan (partie 4.2).
+
+:::tip[Pour une photo bien lisible]
+Posez la page à plat, bien éclairée, sans reflet ni ombre de votre main, et
+cadrez-la en entier.
+:::
+
+:::note[Un code à usage unique]
+Le code est valable **15 minutes** et ne sert **qu'une fois**. Pour un autre
+document, affichez un nouveau code.
+:::
 
 ## 4.2 Extraire le texte (bouton Modifier)
 

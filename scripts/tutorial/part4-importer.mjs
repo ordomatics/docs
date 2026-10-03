@@ -1,5 +1,6 @@
 // Partie 4 : Importer et extraire. Run with `node part4-importer.mjs [clip...]`.
-import { caption, click, highlight, pause, startClip } from "./lib.mjs";
+import { chromium, devices } from "playwright";
+import { BASE_URL, caption, click, highlight, pause, screenshot, startClip } from "./lib.mjs";
 import { AUTH, collapseCopilot, openEditor, resetWorkspace } from "./demo.mjs";
 import { INVOICE_PDF, PHOTO_JPG, SCAN_PDF, makeSamples } from "./samples.mjs";
 
@@ -9,7 +10,8 @@ const HEADED = { storageState: AUTH, audio: true };
 async function importFile(page, file) {
     const [chooser] = await Promise.all([
         page.waitForEvent("filechooser"),
-        click(page, page.locator("#importRibbonBtn"), { after: 300 }),
+        click(page, page.locator("#importRibbonBtn"), { after: 300 }).then(() =>
+            click(page, page.locator(".rb-menu button", { hasText: "Depuis l'ordinateur" }), { after: 300 })),
     ]);
     await chooser.setFiles(file);
     await page.locator(".sa-surface-view iframe, .sa-surface-view img").first().waitFor({ timeout: 30000 });
@@ -19,6 +21,29 @@ async function importFile(page, file) {
 const editButton = (page) => page.getByTitle("Modifier", { exact: true });
 
 const clips = {
+    // 4.1 : photographier avec son téléphone (captures d'écran)
+    async telephone() {
+        await makeSamples();
+        resetWorkspace();
+        const browser = await chromium.launch({ channel: "chrome" });
+        const laptop = await (await browser.newContext({ storageState: AUTH, viewport: { width: 1400, height: 900 } })).newPage();
+        await openEditor(laptop);
+        const started = laptop.waitForResponse((r) => r.url().includes("/editor/capture/start"));
+        await laptop.locator("#importRibbonBtn").click();
+        await laptop.locator(".rb-menu button", { hasText: "Avec mon téléphone" }).click();
+        const { link } = await (await started).json();
+        await laptop.locator(".sa-capture-qr").waitFor();
+        const dialog = await laptop.locator(".modal-content").boundingBox();
+        await screenshot(laptop, "4-1-telephone-qr", { clip: dialog });
+        // Short screen: the pages and the buttons in one compact picture.
+        const phone = await (await browser.newContext({ ...devices["Pixel 7"], viewport: { width: 412, height: 620 } })).newPage();
+        await phone.goto(link.replace(/^https?:\/\/[^/]+/, BASE_URL));
+        await phone.locator("#picker").setInputFiles(PHOTO_JPG);
+        await phone.locator("#picker").setInputFiles(PHOTO_JPG);
+        await screenshot(phone, "4-1-telephone-pages");
+        await browser.close();
+    },
+
     // 4.1 + 4.2 : un PDF qui contient du texte
     async "pdf-texte"() {
         await makeSamples();

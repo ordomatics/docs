@@ -5,6 +5,9 @@ sidebar:
   order: 4
 ---
 
+import { Image } from "astro:assets";
+import qrImage from "../../../assets/editeur/4-1-telephone-qr.png";
+import phoneImage from "../../../assets/editeur/4-1-telephone-pages.png";
 import Clip from "../../../components/Clip.astro";
 
 You can start from an existing document: a PDF received by e-mail, a scanned
@@ -20,12 +23,44 @@ Download these fictional documents (in French) to follow the steps:
 
 ## 4.1 Import
 
-1. Click **Importer** (Import) in the ribbon (or in **Mes fichiers**).
+1. Click **Importer** (Import) in the ribbon, then **Depuis l'ordinateur**
+   (From the computer), or the **Importer** button in **Mes fichiers**.
 2. Choose the file: **PDF**, **image** (JPG, PNG, TIFF, BMP, WebP) or text
    (HTML, TXT).
 3. The document opens **as is**, in its original view.
 
 The file is stored in the folder selected in **Mes fichiers**.
+
+### With your phone
+
+Got the document on paper? Photograph it with your phone, without logging in
+on it: the pages go straight into the editor on your computer.
+
+1. Click **Importer**, then **Avec mon téléphone (photo)** (With my phone),
+   or the phone icon in **Mes fichiers**. A QR code appears.
+2. Scan it with your phone's camera: a « Photographier un document »
+   (Photograph a document) page opens.
+3. Tap **Photographier une page** (Photograph a page) for each page (20 at
+   most), or pick photos from the gallery. Remove a bad page with **×**.
+4. Tap **Envoyer** (Send): on the computer, the document opens by itself.
+
+<div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-start">
+  <Image src={qrImage} alt="The QR code to scan, on the computer" width={300} />
+  <Image src={phoneImage} alt="The phone page, with two photographed pages" width={240} />
+</div>
+
+Several pages make **one document**. It is then extracted like a scan
+(section 4.2).
+
+:::tip[For a readable photo]
+Lay the page flat, well lit, with no glare or shadow from your hand, and
+frame all of it.
+:::
+
+:::note[A single-use code]
+The code is valid for **15 minutes** and works **only once**. For another
+document, show a new code.
+:::
 
 ## 4.2 Extract the text (the Modifier button)
 
