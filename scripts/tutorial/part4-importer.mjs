@@ -2,7 +2,7 @@
 import { chromium, devices } from "playwright";
 import { BASE_URL, caption, click, highlight, pause, screenshot, startClip } from "./lib.mjs";
 import { AUTH, collapseCopilot, openEditor, resetWorkspace } from "./demo.mjs";
-import { INVOICE_PDF, PHOTO_JPG, SCAN_PDF, makeSamples } from "./samples.mjs";
+import { INVOICE_PDF, PHOTO_JPG, SCAN_PDF, WORD_DOCX, makeSamples } from "./samples.mjs";
 
 // Visible browser: headless Chrome doesn't render the PDF viewer in the page.
 const HEADED = { storageState: AUTH, audio: true };
@@ -60,6 +60,34 @@ const clips = {
         await pause(page, 800);
         await highlight(page, page.locator(".sa-doc-editable"));
         await caption(page, "Ce PDF contient déjà du texte : il est extrait aussitôt, gratuitement", 3500);
+        await highlight(page, null);
+        await caption(page, null, 400);
+        await finish({ trimStart: 0.5 });
+    },
+
+    // 4.1 : un document Word
+    async "word"() {
+        await makeSamples();
+        resetWorkspace();
+        const { page, finish } = await startClip("4-4-importer-un-word", HEADED);
+        await openEditor(page);
+        await collapseCopilot(page);
+        await caption(page, "Cliquez sur Importer et choisissez un fichier Word (.docx)");
+        const [chooser] = await Promise.all([
+            page.waitForEvent("filechooser"),
+            click(page, page.locator("#importRibbonBtn"), { after: 300 }).then(() =>
+                click(page, page.locator(".rb-menu button", { hasText: "Depuis l'ordinateur" }), { after: 300 })),
+        ]);
+        await chooser.setFiles(WORD_DOCX);
+        await page.locator(".sa-doc-editable .ProseMirror").filter({ hasText: "7 500" }).waitFor({ timeout: 60000 });
+        await pause(page, 800);
+        await highlight(page, page.locator(".sa-doc-editable"));
+        await caption(page, "Le document est converti aussitôt, gratuitement, et s'ouvre prêt à modifier", 3500);
+        await highlight(page, null);
+        const table = page.locator(".sa-doc-editable table").first();
+        await table.scrollIntoViewIfNeeded();
+        await highlight(page, table);
+        await caption(page, "Titres, listes, gras et tableau sont conservés", 3500);
         await highlight(page, null);
         await caption(page, null, 400);
         await finish({ trimStart: 0.5 });

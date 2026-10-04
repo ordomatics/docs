@@ -90,5 +90,8 @@
  "4. Sélectionnez le paragraphe dicté et corrigez-le avec Régénérer": "4. Select the dictated paragraph and correct it with « Régénérer » (Regenerate)",
  "5. Demandez à Copilot de changer la date de l'assemblée": "5. Ask Copilot to change the date of the meeting",
  "6. Sélectionnez le paragraphe et faites-le lire à voix haute": "6. Select the paragraph and have it read aloud",
- "7. Passez en Aperçu, puis exportez le PDF": "7. Switch to « Aperçu », then export the PDF"
+ "7. Passez en Aperçu, puis exportez le PDF": "7. Switch to « Aperçu », then export the PDF",
+ "Cliquez sur Importer et choisissez un fichier Word (.docx)": "Click Importer (Import) and choose a Word file (.docx)",
+ "Le document est converti aussitôt, gratuitement, et s'ouvre prêt à modifier": "The document is converted at once, for free, and opens ready to edit",
+ "Titres, listes, gras et tableau sont conservés": "Headings, lists, bold text and the table are kept"
 }

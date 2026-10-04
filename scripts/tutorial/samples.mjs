@@ -10,6 +10,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const SAMPLES_DIR = path.resolve(HERE, "../../public/editeur/exemples");
 export const INVOICE_PDF = path.join(SAMPLES_DIR, "facture-atelier-couture.pdf");
 export const SCAN_PDF = path.join(SAMPLES_DIR, "convocation-scannee.pdf");
+export const WORD_DOCX = path.join(SAMPLES_DIR, "tarifs-atelier-couture.docx");
 export const PHOTO_JPG = path.join(SAMPLES_DIR, "devis-photo.jpg");
 
 const PAGE_CSS = `
