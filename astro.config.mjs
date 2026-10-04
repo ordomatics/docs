@@ -66,6 +66,18 @@ export default defineConfig({
                 { label: "6. Watch the logs and upgrade states", link: "/start/getting-started/#6-watch-the-logs-and-upgrade-states" },
               ],
             },
+            {
+              label: "Manage your project",
+              items: [{ label: "Overview", slug: "start/manage-your-project" }],
+            },
+            {
+              label: "Advanced",
+              translations: { fr: "Avancé" },
+              items: [
+                { label: "Bring Your Own Postgres", slug: "start/byo-postgres" },
+                { label: "Bring Your Own Cluster", slug: "start/byo-cluster" },
+              ],
+            },
           ],
         },
         {
