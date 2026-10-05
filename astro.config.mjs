@@ -59,11 +59,13 @@ export default defineConfig({
               items: [
                 { label: "Overview", slug: "start/getting-started" },
                 { label: "1. Create a project", link: "/start/getting-started/#1-create-a-project" },
-                { label: "2. Connect GitHub", link: "/start/getting-started/#2-connect-github" },
-                { label: "3. Develop locally", link: "/start/getting-started/#3-develop-locally" },
-                { label: "4. Push to dev", link: "/start/getting-started/#4-push-to-dev" },
-                { label: "5. Merge to main", link: "/start/getting-started/#5-merge-to-main" },
-                { label: "6. Watch the logs and upgrade states", link: "/start/getting-started/#6-watch-the-logs-and-upgrade-states" },
+                { label: "2. Create your repository", link: "/start/getting-started/#2-create-your-repository" },
+                { label: "3. Connect GitHub", link: "/start/getting-started/#3-connect-github" },
+                { label: "4. Run it locally", link: "/start/getting-started/#4-run-it-locally" },
+                { label: "5. Write your module", link: "/start/getting-started/#5-write-your-module" },
+                { label: "6. Push to dev", link: "/start/getting-started/#6-push-to-dev" },
+                { label: "7. Release to production", link: "/start/getting-started/#7-release-to-production" },
+                { label: "8. Check the logs and the live site", link: "/start/getting-started/#8-check-the-logs-and-the-live-site" },
               ],
             },
             {

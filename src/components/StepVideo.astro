@@ -1,0 +1,32 @@
+---
+// A narrated clip from public/getting-started/, recorded by scripts/getting-started.
+// It has sound, so it never autoplays: the reader starts it.
+interface Props {
+	src: string;
+	caption?: string;
+}
+const { src, caption } = Astro.props;
+const id = `video-${src.replace(/\.mp4$/, "")}`;
+---
+
+<figure class="step-video" id={id}>
+	<video src={`/getting-started/${src}`} playsinline controls preload="metadata"></video>
+	{caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+	.step-video {
+		margin: 1.25rem 0;
+		scroll-margin-top: 5rem;
+	}
+	.step-video video {
+		width: 100%;
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+	}
+	.step-video figcaption {
+		margin-top: 0.4rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>

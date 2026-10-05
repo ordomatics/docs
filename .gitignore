@@ -26,3 +26,8 @@ scripts/tutorial/voices/
 
 # Voice samples (voice-cloning references): never published
 *.wav
+
+# Getting Started recorder: saved sessions and generated voice lines
+scripts/getting-started/.auth/
+scripts/getting-started/voices/
+scripts/getting-started/node_modules

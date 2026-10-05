@@ -1,0 +1,9 @@
+{
+  "name": "getting-started-recorder",
+  "private": true,
+  "type": "module",
+  "description": "Records the Getting Started video: portal, GitHub and VS Code in one scripted browser",
+  "dependencies": {
+    "playwright": "^1.55.0"
+  }
+}

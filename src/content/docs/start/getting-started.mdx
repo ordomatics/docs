@@ -1,0 +1,157 @@
+---
+title: Getting Started
+description: From a new project to your own module running in production, in one video and eight steps.
+---
+
+import StepVideo from "../../../components/StepVideo.astro";
+
+This page takes you from nothing to your own Odoo module running in production. The video
+shows the whole path in about five minutes; the steps below are the same path, one at a time,
+with the commands to copy.
+
+<StepVideo src="getting-started.mp4" caption="The whole path, start to finish. The video has sound." />
+
+You need a GitHub account, and Git and Docker on your machine. The example project is called
+`ged`; use your own project's name wherever it appears.
+
+## 1. Create a project
+
+In the [portal](https://odoo.ordomatics.com), open **Projects** and click **Create a project**.
+Give it a name and an address. The address is permanent: it becomes `https://<address>.ordomatics.com`.
+
+The platform then builds the project: a code repository, file storage, a database and the
+servers. It takes a few minutes, and the page follows along on its own. When it says **Ready**,
+your Odoo is online.
+
+<StepVideo src="1-create.mp4" />
+
+## 2. Create your repository
+
+Your code lives in your own GitHub repository, created from our template.
+
+On [ordomatics/odoo-template](https://github.com/ordomatics/odoo-template), click
+**Use this template** → **Create a new repository**. Make it **Private**, and leave
+**Include all branches** off.
+
+<StepVideo src="2a-repository.mp4" />
+
+Clone it, then create the `dev` branch. You work on `dev`; `main` is what production runs.
+
+```bash
+git clone https://github.com/<you>/ged.git
+cd ged
+git switch -c dev
+git push -u origin dev
+```
+
+<StepVideo src="2b-clone.mp4" />
+
+## 3. Connect GitHub
+
+On your project's page in the portal, click **Connect GitHub**. GitHub asks which repositories
+the Ordomatics app may access: choose **Only select repositories** and pick yours, then **Install**.
+
+Back in the portal, pick the repository and click **Use**. The platform writes everything the
+build pipeline needs into the repository's settings. You set none of it by hand.
+
+<StepVideo src="3-connect.mp4" />
+
+## 4. Run it locally
+
+Copy the example environment file and set three values in it:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Value |
+|---|---|
+| `COMPOSE_PROJECT_NAME` | Your project's name |
+| `PLATFORM_TAG` | Your project's Odoo version, e.g. `18.0` |
+| `DB_NAME` | Your project's name |
+
+Then start the stack:
+
+```bash
+docker compose up --build -d
+```
+
+The first start installs every module and takes a few minutes. Odoo is then on
+[localhost:8069](http://localhost:8069), with the login `admin` and the password `admin`.
+It is the same image production runs.
+
+<StepVideo src="4-local.mp4" />
+
+## 5. Write your module
+
+Modules go in `addons/`. The example adds a filing reference to every document, on top of the
+document management module that ships with the platform.
+
+List your module at the **end** of `modules.cfg`, with anything it depends on before it:
+
+```text
+dms
+ged
+```
+
+That list is what gets a module installed, here and in production. Then restart Odoo:
+
+```bash
+docker compose restart odoo
+```
+
+A restart is enough because the platform's image installs and upgrades everything in
+`modules.cfg` each time it starts: new modules are installed, the others upgraded. You do not
+run `-i` or `-u` yourself.
+
+<StepVideo src="5-module.mp4" />
+
+## 6. Push to dev
+
+```bash
+git add -A
+git commit -m "GED: a filing reference on documents"
+git push
+```
+
+Every push to `dev` builds your image and tests that Odoo starts with it. Follow the run under
+**Actions** in your repository.
+
+<StepVideo src="6-dev.mp4" />
+
+## 7. Release to production
+
+When the `dev` run has passed, fast-forward `main` to `dev` and push:
+
+```bash
+git switch main
+git merge --ff-only dev
+git push
+git switch dev
+```
+
+Production gets exactly the image that `dev` built and tested. Nothing is rebuilt. Your project's
+database is upgraded first, then the servers restart on the new image; expect the site to be
+unavailable for a minute. The portal shows the release arrive, and then **Up to date**.
+
+<StepVideo src="7-release.mp4" />
+
+## 8. Check the logs and the live site
+
+On the environment's page in the portal, **View logs** shows the web server, the background jobs
+and the live-updates server.
+
+Then open your site and sign in. A new project starts with the login `admin` and the password
+`admin`.
+
+:::caution
+Change that password as soon as you have signed in: your site is on the public internet.
+In Odoo, open your user menu → **My Profile** → **Account Security** → **Change Password**.
+:::
+
+<StepVideo src="8-live.mp4" />
+
+## Next steps
+
+Once a project is running, see [Manage your project](/start/manage-your-project/) for
+environments, databases and your own domain.

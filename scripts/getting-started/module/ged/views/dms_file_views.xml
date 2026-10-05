@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dms_file_form_ged_reference" model="ir.ui.view">
+        <field name="name">dms_file.form.ged_reference</field>
+        <field name="model">dms.file</field>
+        <field name="inherit_id" ref="dms.view_dms_file_form"/>
+        <field name="arch" type="xml">
+            <field name="extension" position="before">
+                <field name="ged_reference"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_dms_file_tree_ged_reference" model="ir.ui.view">
+        <field name="name">dms_file.list.ged_reference</field>
+        <field name="model">dms.file</field>
+        <field name="inherit_id" ref="dms.view_dms_file_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="ged_reference"/>
+            </field>
+        </field>
+    </record>
+</odoo>
