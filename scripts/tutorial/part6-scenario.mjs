@@ -110,6 +110,7 @@ async function run() {
         await browseDocument(page);
         await caption(page, "… et cliquez sur Modifier pour en extraire le texte (attente accélérée)");
         await click(page, page.getByTitle("Modifier", { exact: true }), { after: 300 });
+        await click(page, page.locator(".modal-content").getByRole("button", { name: "Extraire" }), { after: 300 });
         fastForward(8);
         await page.locator(".sa-doc-editable .ProseMirror").filter({ hasText: "Ibrahima Ba" }).waitFor({ timeout: 300000 });
         fastForward();

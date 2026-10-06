@@ -18,6 +18,11 @@ async function importFile(page, file) {
     await pause(page, 2500);
 }
 
+async function confirmExtraction(page) {
+    await caption(page, "L'éditeur annonce le nombre de pages et le prix : cliquez sur Extraire");
+    await click(page, page.locator(".modal-content").getByRole("button", { name: "Extraire" }), { after: 300 });
+}
+
 const editButton = (page) => page.getByTitle("Modifier", { exact: true });
 
 const clips = {
@@ -104,6 +109,7 @@ const clips = {
         await importFile(page, SCAN_PDF);
         await caption(page, "Cliquez sur Modifier pour en extraire le texte");
         await click(page, editButton(page), { after: 300 });
+        await confirmExtraction(page);
         await caption(page, "L'IA lit chaque page : la progression s'affiche en bas de l'écran");
         await highlight(page, page.locator("#statusBar"));
         await pause(page, 2500);
@@ -132,6 +138,7 @@ const clips = {
         await importFile(page, PHOTO_JPG);
         await caption(page, "Cliquez sur Modifier pour en extraire le texte");
         await click(page, editButton(page), { after: 300 });
+        await confirmExtraction(page);
         await caption(page, "⏳ L'IA lit la photo, tableau compris (vidéo accélérée)");
         fastForward(8);
         await page.locator(".sa-doc-editable .ProseMirror").filter({ hasText: "678" }).waitFor({ timeout: 300000 });
