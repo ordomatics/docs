@@ -70,7 +70,10 @@ export default defineConfig({
             },
             {
               label: "Manage your project",
-              items: [{ label: "Overview", slug: "start/manage-your-project" }],
+              items: [
+                { label: "Overview", slug: "start/manage-your-project" },
+                { label: "Onboard a client", slug: "start/onboard-a-client" },
+              ],
             },
             {
               label: "Advanced",

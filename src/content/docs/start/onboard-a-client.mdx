@@ -1,0 +1,62 @@
+---
+title: Onboard a client
+description: Give one of your own customers their own Odoo on your project's servers.
+---
+
+import StepVideo from "../../../components/StepVideo.astro";
+
+A project can serve more than one business. Each client you onboard gets their own Odoo
+database and their own address, running on the servers your project already has. They sign in
+at the address you hand them; running it stays with you.
+
+<StepVideo dir="manage" src="onboard-a-client.mp4" caption="Onboarding a client, start to finish. The waiting is played fast; the video has no sound." />
+
+## Before you start
+
+You need a project that is **Ready**, with its production environment running. If you do not
+have one yet, follow [Getting Started](/start/getting-started/).
+
+## 1. Open the production environment
+
+In the portal, open **Projects**, then your project, then **Edit** next to its production
+environment. The **Clients** list on that page starts with one line: your project's own Odoo,
+marked **you**.
+
+## 2. Enter the client's name and a contact email
+
+Under the list, type the client's name and a contact email, then press **Onboard**.
+
+The name decides the address. A client called `Baobab` on the project `ged` gets
+`https://baobab.ged.ordomatics.com`.
+
+## 3. Wait for it to be ready
+
+The client appears in the list straight away, and its status moves through **Setting up** to
+**Ready** in about four minutes. That is the platform creating the database and installing the
+same modules your project runs.
+
+The address is published just after that, by a redeploy of your servers. Allow a few more
+minutes before you open it.
+
+:::caution
+The first client you onboard restarts all of your project's servers once, so your own Odoo is
+unavailable for a few minutes while that happens. Pick a quiet moment. Later clients
+only restart the background jobs.
+:::
+
+## 4. Hand over the address
+
+Open the client's address and sign in. A new database starts with the login `admin` and the
+password `admin`: change that password before you give the address to anyone.
+
+## Afterwards
+
+Each client has its own line in the **Clients** list:
+
+- **Pause** stops serving that client without touching their data. **Resume** brings them back.
+- **Auto-upgrade** decides whether their database is upgraded with each release of your
+  project. It is on by default.
+- **Offboard** removes the client and their database. You confirm by typing your project's
+  name.
+
+Every client shares your project's servers, so each one you add uses some of their memory.

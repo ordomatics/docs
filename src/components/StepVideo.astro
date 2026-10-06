@@ -1,16 +1,17 @@
 ---
-// A narrated clip from public/getting-started/, recorded by scripts/getting-started.
-// It has sound, so it never autoplays: the reader starts it.
+// A recorded clip from public/<dir>/ (getting-started by default), made by scripts/.
+// It never autoplays: the reader starts it.
 interface Props {
 	src: string;
 	caption?: string;
+	dir?: string;
 }
-const { src, caption } = Astro.props;
+const { src, caption, dir = "getting-started" } = Astro.props;
 const id = `video-${src.replace(/\.mp4$/, "")}`;
 ---
 
 <figure class="step-video" id={id}>
-	<video src={`/getting-started/${src}`} playsinline controls preload="metadata"></video>
+	<video src={`/${dir}/${src}`} playsinline controls preload="metadata"></video>
 	{caption && <figcaption>{caption}</figcaption>}
 </figure>
 
