@@ -58,7 +58,7 @@ const clips = {
         await annotate(page, [
             [page.locator("#filesPanel"), 1],
             [[page.locator("#newRibbonBtn"), page.locator("#exportRibbonBtn")], 2],
-            [[page.locator("#ribbonToolbar button").first(), page.locator("#ribbonToolbar button").last()], 3],
+            [[page.locator("#ribbonToolbar button").first(), page.locator("#toolbarMore")], 3],
             [page.locator(".doc-scroll"), 4],
             [page.locator("#statusBar"), 5],
             [page.locator("#assistantPanel"), 6],

@@ -79,7 +79,7 @@ const clips = {
         await toPreview(page);
         const menu = await openExportMenu(page);
         await highlight(page, menu);
-        await caption(page, "PDF ou image : le fichier est identique à l'aperçu", 3000);
+        await caption(page, "PDF ou image, identiques à l'aperçu, ou envoi sur le téléphone", 3000);
         await screenshot(page, "5-3-exporter-apercu");
         await highlight(page, null);
         const [download] = await Promise.all([
