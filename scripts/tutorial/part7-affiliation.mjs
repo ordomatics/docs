@@ -1,5 +1,5 @@
 // Bonus : affiliation. Run with `node part7-affiliation.mjs [clip...]`.
-import { caption, click, highlight, odooShell, pause, startClip, type } from "./lib.mjs";
+import { BASE_URL, caption, click, highlight, odooShell, pause, screenshot, startClip, type } from "./lib.mjs";
 import { AUTH, EMAIL, openEditor } from "./demo.mjs";
 
 const DEMO_ACCOUNT = `
@@ -87,8 +87,20 @@ const clips = {
         await finish({ trimStart: 0.5 });
     },
 
+    // B.1 : la page publique de candidature et le kit de vente (captures)
+    async pages() {
+        const { page, finish } = await startClip(null);
+        await page.goto(`${BASE_URL}/affiliation`);
+        await screenshot(page, "bonus-0-devenir-distributeur", { clip: { x: 220, y: 0, width: 1000, height: 560 } });
+        await page.goto(`${BASE_URL}/affiliation/kit`);
+        await page.evaluate(() => document.fonts.ready);
+        await screenshot(page, "bonus-3-kit-de-vente", { clip: { x: 320, y: 0, width: 800, height: 700 } });
+        await finish();
+    },
+
     // B.2 et B.3 : l'espace affilié et le retrait
     async espace() {
+        resetAffiliation();
         approveWithCommissions();
         const { page, finish, fastForward } = await startClip("bonus-2-espace-affilie", { storageState: AUTH, voiceOver: { language: "fr" } });
         await openAccountPanel(page);
@@ -102,21 +114,30 @@ const clips = {
         // The dev stack builds the referral link on localhost; show the production address instead.
         await page.route("**/editor/affiliate/summary**", async (route) => {
             const response = await route.fetch();
-            const body = (await response.text()).replaceAll("http://localhost:8069", "https://smartacus.ordomatics.com");
+            const body = (await response.text()).replaceAll("http://localhost:8069", "https://odoo.smartacus.pro");
             await route.fulfill({ response, body });
         });
         await click(page, mini.getByRole("link", { name: "Voir" }), { after: 300 });
         fastForward(8);
         await page.waitForURL(/\/my\/affiliation/, { timeout: 30000 });
-        const portal = page.locator(".sa-affiliate-card").first();
-        await portal.waitFor({ timeout: 30000 });
+        await page.locator(".sa-aff-page").waitFor({ timeout: 30000 });
+        await page.locator(".sa-aff-share img").evaluate((img) => img.decode());
         fastForward();
         await pause(page, 1200);
-        const link = page.getByLabel("Lien de parrainage").locator("..");
-        await highlight(page, link);
-        await caption(page, "Partagez votre lien de parrainage : chaque recharge de vos filleuls vous rapporte une commission", 4000);
+        await screenshot(page, "bonus-2-espace-affilie");
+        await highlight(page, page.locator(".sa-aff-balance"));
+        await caption(page, "Votre espace affiche le solde payable, les commissions en attente et vos clients inscrits", 4000);
+        const share = page.locator(".sa-aff-share");
+        await highlight(page, share);
+        await caption(page, "Votre QR code et votre lien de parrainage : chaque recharge de vos filleuls vous rapporte une commission", 4500);
+        await highlight(page, null);
+        await caption(page, "Cliquez sur le QR code pour l'afficher en grand et le faire scanner", 3000);
+        await click(page, page.locator(".sa-aff-qr-open"), { after: 2500 });
+        await click(page, page.locator(".sa-aff-qr-full").getByRole("button", { name: "Fermer" }), { after: 600 });
         await click(page, page.getByTitle("Copier le lien"), { after: 800 });
-        await highlight(page, page.locator(".sa-affiliate-balance"));
+        await highlight(page, share.getByRole("link", { name: "Ouvrir le kit de vente" }));
+        await caption(page, "Le kit de vente rassemble l'argumentaire et des messages prêts à envoyer", 3500);
+        await highlight(page, page.locator(".sa-aff-balance"));
         await caption(page, "Le solde payable peut être retiré sur votre compte Wave", 3000);
         await highlight(page, null);
         await click(page, page.getByRole("button", { name: "Retirer via Wave" }), { after: 800 });
