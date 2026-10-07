@@ -10,3 +10,4 @@ node part4-importer.mjs
 node part5-apercu.mjs
 node part6-scenario.mjs
 node part7-affiliation.mjs
+node part8-telephone.mjs
