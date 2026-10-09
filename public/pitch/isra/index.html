@@ -127,7 +127,7 @@ a{color:var(--brand)}
 
 <h2><span class="n">4</span>Hébergement : ce que nous développerions pour l'ISRA</h2>
 <p>Notre offre en ligne actuelle (saas.ordomatics.com) est hébergée hors du Sénégal. Pour l'ISRA, le déploiement serait réalisé entièrement sur l'infrastructure choisie par l'ISRA, parmi les options A (sur site), B (data center agréé) ou C (hybride), sans dépendre d'un service extérieur au territoire.</p>
-<p>Le principe « apportez votre propre infrastructure » (base de données, stockage, serveurs appartenant au client) est déjà conçu et en cours de réalisation dans la plateforme. Le développement propre à l'ISRA consiste à :</p>
+<p>La plateforme sait déjà viser un cluster Kubernetes par ses coordonnées de connexion, et le principe « apportez votre propre base de données » est conçu et en partie réalisé. Le raccordement d'un cluster appartenant au client, son stockage et son DNS restent à développer. Le développement propre à l'ISRA consiste à :</p>
 <ul>
   <li>exploiter PostgreSQL en haute disponibilité sur l'infrastructure de l'ISRA : un cluster à trois instances avec bascule automatique ; lors de notre test en laboratoire, une instance de secours a pris le relais en environ 3,5 minutes après la perte du serveur principal, sans perte de données ;</li>
   <li>stocker les pièces jointes sur un stockage objet compatible S3, sur place ;</li>
