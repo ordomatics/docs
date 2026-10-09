@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Une plateforme souveraine et ouverte pour l'ERP de l'ISRA | Ordomatics</title>
+<meta name="description" content="Contribution d'Ordomatics au projet d'acquisition et de mise en œuvre d'un ERP de l'ISRA : la plateforme sur laquelle l'intégrateur déploie et exploite Odoo.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..800&display=swap">
+<style>
+:root{--ink:#17122B;--muted:#55506B;--brand:#5537C8;--line:#DDD8F0;--tint:#F0EDFA;--bg:#FAF9FD}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;font-family:'DM Sans',Arial,sans-serif;color:var(--ink);line-height:1.55;font-size:17px}
+.wrap{max-width:980px;margin:0 auto;padding:40px 24px 72px}
+header{display:flex;flex-direction:column;gap:14px;margin-bottom:36px}
+.brand{display:flex;align-items:center;gap:14px;font-weight:700;font-size:20px}
+.brand svg{width:44px;height:44px;flex:none}
+h1{font-size:40px;line-height:1.15;margin:8px 0 0;font-weight:800}
+.lead{font-size:20px;color:var(--muted);margin:0}
+.meta{font-size:14px;color:var(--muted)}
+h2{font-size:26px;margin:44px 0 14px;font-weight:800;padding-top:8px;border-top:1px solid var(--line)}
+h2 .n{color:var(--brand);margin-right:8px}
+p{margin:0 0 14px}
+ul{margin:0 0 14px;padding-left:22px}
+li{margin:0 0 6px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.card h3{margin:0 0 10px;font-size:18px;color:var(--brand)}
+.card ul{margin:0}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:15px;margin:0 0 12px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--ink);color:#FAF9FD;font-weight:700}
+tr:nth-child(even) td{background:#FBFAFE}
+td.crit{font-weight:700;width:24%}
+.tag{display:inline-block;white-space:nowrap;font-size:13px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid}
+.ok{color:#14532D;background:#E3F6EA;border-color:#9ED8B3}
+.sp{color:#3B2A8F;background:#EAE5FB;border-color:#B8ABEE}
+.cl{color:#7A4A00;background:#FFF1D6;border-color:#EBC77F}
+.legend{font-size:14px;color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+.mine{color:var(--brand);font-weight:700}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+a{color:var(--brand)}
+.scroll{overflow-x:auto}
+@media (max-width:760px){.cols{grid-template-columns:1fr}h1{font-size:30px}body{font-size:16px}}
+@media print{
+  html{background:#fff}.wrap{padding:0}
+  h2{break-after:avoid}table,.card{break-inside:avoid}
+  a{color:inherit}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 512 512" aria-label="Ordomatics"><rect width="512" height="512" rx="112" fill="#5537C8"/><path d="M220.0 300.0 L220.8 300.0 L221.6 300.2 L222.3 300.3 L223.1 300.6 L223.8 300.9 L224.4 301.3 L225.1 301.8 L225.7 302.3 L226.2 302.9 L226.7 303.6 L227.1 304.2 L227.4 304.9 L227.7 305.7 L227.8 306.4 L228.0 307.2 L228.0 308.0 L228.0 324.0 L228.0 324.8 L227.8 325.6 L227.7 326.3 L227.4 327.1 L227.1 327.8 L226.7 328.4 L226.2 329.1 L225.7 329.7 L225.1 330.2 L224.4 330.7 L223.8 331.1 L223.1 331.4 L222.3 331.7 L221.6 331.8 L220.8 332.0 L220.0 332.0 L196.1 332.0 L195.9 332.0 L193.8 332.1 L193.5 332.1 L191.5 332.4 L191.1 332.5 L189.2 333.0 L188.8 333.1 L187.0 333.8 L186.6 333.9 L184.9 334.7 L184.5 334.9 L182.8 335.9 L182.5 336.2 L180.9 337.3 L180.6 337.6 L179.2 338.9 L178.9 339.2 L177.6 340.6 L177.3 340.9 L176.2 342.5 L175.9 342.8 L174.9 344.5 L174.7 344.9 L173.9 346.6 L173.8 347.0 L173.1 348.8 L173.0 349.2 L172.5 351.1 L172.4 351.5 L172.1 353.5 L172.1 353.8 L172.0 355.9 L172.0 356.1 L172.0 427.9 L172.0 428.1 L172.1 430.2 L172.1 430.5 L172.4 432.5 L172.5 432.9 L173.0 434.8 L173.1 435.2 L173.8 437.0 L173.9 437.4 L174.7 439.1 L174.9 439.5 L175.9 441.2 L176.2 441.5 L177.3 443.1 L177.6 443.4 L178.9 444.8 L179.2 445.1 L180.6 446.4 L180.9 446.7 L182.5 447.8 L182.8 448.1 L184.5 449.1 L184.9 449.3 L186.6 450.1 L187.0 450.2 L188.8 450.9 L189.2 451.0 L191.1 451.5 L191.5 451.6 L193.5 451.9 L193.8 451.9 L195.9 452.0 L196.1 452.0 L267.9 452.0 L268.1 452.0 L270.2 451.9 L270.5 451.9 L272.5 451.6 L272.9 451.5 L274.8 451.0 L275.2 450.9 L277.0 450.2 L277.4 450.1 L279.1 449.3 L279.5 449.1 L281.2 448.1 L281.5 447.8 L283.1 446.7 L283.4 446.4 L284.8 445.1 L285.1 444.8 L286.4 443.4 L286.7 443.1 L287.8 441.5 L288.1 441.2 L289.1 439.5 L289.3 439.1 L290.1 437.4 L290.2 437.0 L290.9 435.2 L291.0 434.8 L291.5 432.9 L291.6 432.5 L291.9 430.5 L291.9 430.2 L292.0 428.1 L292.0 427.9 L292.0 356.0 L292.0 355.2 L292.2 354.4 L292.3 353.7 L292.6 352.9 L292.9 352.2 L293.3 351.6 L293.8 350.9 L294.3 350.3 L294.9 349.8 L295.6 349.3 L296.2 348.9 L296.9 348.6 L297.7 348.3 L298.4 348.2 L299.2 348.0 L300.0 348.0 L383.9 348.0 L384.1 348.0 L386.2 347.9 L386.5 347.9 L388.5 347.6 L388.9 347.5 L390.8 347.0 L391.2 346.9 L393.0 346.2 L393.4 346.1 L395.1 345.3 L395.5 345.1 L397.2 344.1 L397.5 343.8 L399.1 342.7 L399.4 342.4 L400.8 341.1 L401.1 340.8 L402.4 339.4 L402.7 339.1 L403.8 337.5 L404.1 337.2 L405.1 335.5 L405.3 335.1 L406.1 333.4 L406.2 333.0 L406.9 331.2 L407.0 330.8 L407.5 328.9 L407.6 328.5 L407.9 326.5 L407.9 326.2 L408.0 324.1 L408.0 323.9 L408.0 244.1 L408.0 243.9 L407.9 241.8 L407.9 241.5 L407.6 239.5 L407.5 239.1 L407.0 237.2 L406.9 236.8 L406.2 235.0 L406.1 234.6 L405.3 232.9 L405.1 232.5 L404.1 230.8 L403.8 230.5 L402.7 228.9 L402.4 228.6 L401.1 227.2 L400.8 226.9 L399.4 225.6 L399.1 225.3 L397.5 224.2 L397.2 223.9 L395.5 222.9 L395.1 222.7 L393.4 221.9 L393.0 221.8 L391.2 221.1 L390.8 221.0 L388.9 220.5 L388.5 220.4 L386.5 220.1 L386.2 220.1 L384.1 220.0 L383.9 220.0 L256.0 220.0 L255.2 220.0 L254.4 219.8 L253.7 219.7 L252.9 219.4 L252.2 219.1 L251.6 218.7 L250.9 218.2 L250.3 217.7 L249.8 217.1 L249.3 216.4 L248.9 215.8 L248.6 215.1 L248.3 214.3 L248.2 213.6 L248.0 212.8 L248.0 212.0 L248.0 196.0 L248.0 195.2 L248.2 194.4 L248.3 193.7 L248.6 192.9 L248.9 192.2 L249.3 191.6 L249.8 190.9 L250.3 190.3 L250.9 189.8 L251.6 189.3 L252.2 188.9 L252.9 188.6 L253.7 188.3 L254.4 188.2 L255.2 188.0 L256.0 188.0 L335.9 188.0 L336.1 188.0 L338.2 187.9 L338.5 187.9 L340.5 187.6 L340.9 187.5 L342.8 187.0 L343.2 186.9 L345.0 186.2 L345.4 186.1 L347.1 185.3 L347.5 185.1 L349.2 184.1 L349.5 183.8 L351.1 182.7 L351.4 182.4 L352.8 181.1 L353.1 180.8 L354.4 179.4 L354.7 179.1 L355.8 177.5 L356.1 177.2 L357.1 175.5 L357.3 175.1 L358.1 173.4 L358.2 173.0 L358.9 171.2 L359.0 170.8 L359.5 168.9 L359.6 168.5 L359.9 166.5 L359.9 166.2 L360.0 164.1 L360.0 163.9 L360.0 84.1 L360.0 83.9 L359.9 81.8 L359.9 81.5 L359.6 79.5 L359.5 79.1 L359.0 77.2 L358.9 76.8 L358.2 75.0 L358.1 74.6 L357.3 72.9 L357.1 72.5 L356.1 70.8 L355.8 70.5 L354.7 68.9 L354.4 68.6 L353.1 67.2 L352.8 66.9 L351.4 65.6 L351.1 65.3 L349.5 64.2 L349.2 63.9 L347.5 62.9 L347.1 62.7 L345.4 61.9 L345.0 61.8 L343.2 61.1 L342.8 61.0 L340.9 60.5 L340.5 60.4 L338.5 60.1 L338.2 60.1 L336.1 60.0 L335.9 60.0 L256.1 60.0 L255.9 60.0 L253.8 60.1 L253.5 60.1 L251.5 60.4 L251.1 60.5 L249.2 61.0 L248.8 61.1 L247.0 61.8 L246.6 61.9 L244.9 62.7 L244.5 62.9 L242.8 63.9 L242.5 64.2 L240.9 65.3 L240.6 65.6 L239.2 66.9 L238.9 67.2 L237.6 68.6 L237.3 68.9 L236.2 70.5 L235.9 70.8 L234.9 72.5 L234.7 72.9 L233.9 74.6 L233.8 75.0 L233.1 76.8 L233.0 77.2 L232.5 79.1 L232.4 79.5 L232.1 81.5 L232.1 81.8 L232.0 83.9 L232.0 84.1 L232.0 164.0 L232.0 164.8 L231.8 165.6 L231.7 166.3 L231.4 167.1 L231.1 167.8 L230.7 168.4 L230.2 169.1 L229.7 169.7 L229.1 170.2 L228.4 170.7 L227.8 171.1 L227.1 171.4 L226.3 171.7 L225.6 171.8 L224.8 172.0 L224.0 172.0 L128.1 172.0 L127.9 172.0 L125.8 172.1 L125.5 172.1 L123.5 172.4 L123.1 172.5 L121.2 173.0 L120.8 173.1 L119.0 173.8 L118.6 173.9 L116.9 174.7 L116.5 174.9 L114.8 175.9 L114.5 176.2 L112.9 177.3 L112.6 177.6 L111.2 178.9 L110.9 179.2 L109.6 180.6 L109.3 180.9 L108.2 182.5 L107.9 182.8 L106.9 184.5 L106.7 184.9 L105.9 186.6 L105.8 187.0 L105.1 188.8 L105.0 189.2 L104.5 191.1 L104.4 191.5 L104.1 193.5 L104.1 193.8 L104.0 195.9 L104.0 196.1 L104.0 275.9 L104.0 276.1 L104.1 278.2 L104.1 278.5 L104.4 280.5 L104.5 280.9 L105.0 282.8 L105.1 283.2 L105.8 285.0 L105.9 285.4 L106.7 287.1 L106.9 287.5 L107.9 289.2 L108.2 289.5 L109.3 291.1 L109.6 291.4 L110.9 292.8 L111.2 293.1 L112.6 294.4 L112.9 294.7 L114.5 295.8 L114.8 296.1 L116.5 297.1 L116.9 297.3 L118.6 298.1 L119.0 298.2 L120.8 298.9 L121.2 299.0 L123.1 299.5 L123.5 299.6 L125.5 299.9 L125.8 299.9 L127.9 300.0 L128.1 300.0 L220.0 300.0 Z" fill="#FFFFFF"/></svg>
+    <span>Ordomatics</span>
+  </div>
+  <h1>Une plateforme souveraine et ouverte pour l'ERP de l'ISRA</h1>
+  <p class="lead">Contribution d'Ordomatics au projet d'acquisition et de mise en œuvre d'un ERP (réf. TDR-UIG-ERP-ISRA-2026-V3.0).</p>
+  <p class="meta">Octobre 2026 · Version de travail · À l'attention de l'Unité Informatique et Gestion et des intégrateurs candidats</p>
+</header>
+
+<h2><span class="n">1</span>En bref</h2>
+<p>L'ISRA choisira un intégrateur pour le périmètre fonctionnel de son ERP. Quel que soit cet intégrateur, l'ERP devra tourner sur une plateforme qui répond aux exigences de souveraineté, de standards ouverts, de sécurité et de maîtrise du coût sur cinq ans que fixent les sections 4, 7 et 13 des termes de référence.</p>
+<p>Ordomatics propose cette plateforme. Nous ne remplaçons pas l'intégrateur : nous ne livrons ni la comptabilité, ni la paie, ni le budget. Nous fournissons le socle sur lequel il les déploie, les exploite et les fait évoluer.</p>
+<ul>
+  <li><b>Ouvert.</b> Odoo Community et PostgreSQL ; aucune licence de logiciel par utilisateur du côté de la plateforme.</li>
+  <li><b>Là où l'ISRA l'exige.</b> Sur ses serveurs à la Direction Générale, dans un data center agréé au Sénégal, ou les deux : les options A, B et C du TDR.</li>
+  <li><b>Une livraison maîtrisée.</b> Des environnements de développement, de test et de production, et un déploiement par étapes, du pilote DG aux centres.</li>
+  <li><b>La gestion documentaire et l'IA dans l'image de base.</b> Un module de GED et une base de connaissances avec recherche vectorielle, prêts pour la Phase 2.</li>
+</ul>
+
+<h2><span class="n">2</span>Qui fait quoi</h2>
+<div class="cols">
+  <div class="card">
+    <h3>Ordomatics : la plateforme</h3>
+    <ul>
+      <li>Hébergement et déploiement</li>
+      <li>Environnements et chaîne de livraison</li>
+      <li>Sauvegardes, reprise d'activité, supervision</li>
+      <li>Sécurité de la plateforme : annuaire LDAP, authentification à deux facteurs</li>
+      <li>Support de la plateforme à Dakar et mises à jour</li>
+      <li>Formation des administrateurs à la plateforme</li>
+      <li>GED et couche d'IA, en Phase 2</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>L'intégrateur : le projet</h3>
+    <ul>
+      <li>Cadrage et spécifications</li>
+      <li>Paramétrage fonctionnel : comptabilité SYSCOHADA, budget et engagements, trésorerie, achats et marchés, immobilisations, stocks, projets, RH et paie</li>
+      <li>Migration de Sage 500, Sage I7, Excel et Access</li>
+      <li>Formation des utilisateurs et conduite du changement</li>
+      <li>Pilotage du projet, recette, références</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="n">3</span>Ce que la plateforme apporte, au regard des termes de référence</h2>
+<p class="legend">
+  <span class="tag ok">Disponible</span> déjà en service chez nous ·
+  <span class="tag sp">Spécifique ISRA</span> à développer, configurer ou dimensionner pour l'ISRA ·
+  <span class="tag cl">À préciser</span> point à clarifier avec l'ISRA
+</p>
+<div class="scroll">
+<table>
+  <tr><th>Exigence du TDR</th><th>Réponse de la plateforme</th><th>Statut</th></tr>
+  <tr><td class="crit">Hébergement souverain, Docker/Kubernetes (4.1, 4.2)</td><td>Déploiement par conteneurs et charts Helm sur les serveurs de l'ISRA ou dans un data center agréé au Sénégal, sans dépendre d'un service situé hors du territoire. Voir la section 4.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">PostgreSQL, open source, API, formats ouverts (4.3, 4.4)</td><td>PostgreSQL ; Odoo Community ; API REST ; échanges en XML, JSON et CSV.</td><td><span class="tag ok">Disponible</span></td></tr>
+  <tr><td class="crit">Environnements et déploiement par phases (11)</td><td>Développement, test et production séparés. Les copies de test reprennent les données réelles avec l'envoi d'e-mails et les paiements désactivés. La même image va de la recette à la production.</td><td><span class="tag ok">Disponible</span></td></tr>
+  <tr><td class="crit">Annuaire LDAP, authentification forte, droits par profil (4.5, 7.1)</td><td>Connexion à l'annuaire LDAP et authentification à deux facteurs natives ; droits par profil, module et entité (multi-sociétés).</td><td><span class="tag ok">Disponible</span></td></tr>
+  <tr><td class="crit">SSO CAS, piste d'audit, journaux 12 mois (4.4, 7.2)</td><td>Intégration CAS et piste d'audit renforcée à spécifier avec l'ISRA ; export des journaux vers un SIEM.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">Sauvegarde 3-2-1, reprise d'activité : RPO ≤ 4 h, RTO ≤ 8 h (4.2, 7.3, 7.4)</td><td>Sauvegardes automatiques quotidiennes aujourd'hui. La politique 3-2-1, les objectifs de reprise et les tests de restauration sont à dimensionner et à documenter pour l'ISRA.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">Interopérabilité : Zimbra, Maarch, GLPI, Nextcloud (4.4, 5)</td><td>API REST et automatisations n8n. Les connecteurs vers les briques de l'ISRA sont à réaliser avec l'intégrateur.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">GED et courrier (3.3, 5)</td><td>Module de gestion documentaire et base de connaissances avec recherche vectorielle dans l'image de base. Cohabitation avec Maarch Courrier et Parapheur par API, sans les remplacer ; le TDR place la GED avancée en Phase 2.</td><td><span class="tag ok">Disponible</span></td></tr>
+  <tr><td class="crit">Reporting et tableaux de bord (3.4.10)</td><td>Tableaux de bord et exports CSV, Excel, JSON. Des assistants d'IA, en option, interrogent les données de l'institution, avec un modèle hébergé en privé si l'ISRA le souhaite.</td><td><span class="tag ok">Disponible</span></td></tr>
+  <tr><td class="crit">Performance : 89 utilisateurs simultanés, 500 Go (4.6)</td><td>Dimensionnement proposé dans l'offre, pour la phase initiale et la montée en charge sur cinq ans.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">Support dans la sous-région, SLA, correctifs pendant 5 ans (8.4)</td><td>Équipe basée à Dakar. Les niveaux de service seront formalisés dans l'offre.</td><td><span class="tag sp">Spécifique ISRA</span></td></tr>
+  <tr><td class="crit">Mode dégradé hors ligne (3.2, 14)</td><td>Odoo s'utilise dans un navigateur et demande une connexion. À préciser avec l'ISRA : les sites concernés, les débits réels et la solution (serveur régional, amélioration de la liaison).</td><td><span class="tag cl">À préciser</span></td></tr>
+</table>
+</div>
+
+<h2><span class="n">4</span>Hébergement : ce que nous développerions pour l'ISRA</h2>
+<p>Notre offre en ligne actuelle (saas.ordomatics.com) est hébergée hors du Sénégal. Pour l'ISRA, le déploiement serait réalisé entièrement sur l'infrastructure choisie par l'ISRA, parmi les options A (sur site), B (data center agréé) ou C (hybride), sans dépendre d'un service extérieur au territoire.</p>
+<p>Le principe « apportez votre propre infrastructure » (base de données, stockage, serveurs appartenant au client) est déjà conçu et en cours de réalisation dans la plateforme. Le développement propre à l'ISRA consiste à :</p>
+<ul>
+  <li>exploiter PostgreSQL en haute disponibilité sur l'infrastructure de l'ISRA : un cluster à trois instances avec bascule automatique ; lors de notre test en laboratoire, une instance de secours a pris le relais en environ 3,5 minutes après la perte du serveur principal, sans perte de données ;</li>
+  <li>stocker les pièces jointes sur un stockage objet compatible S3, sur place ;</li>
+  <li>héberger sur place le registre d'images et la chaîne de livraison ;</li>
+  <li>utiliser le DNS et les certificats internes de l'ISRA ;</li>
+  <li>relier la supervision et les journaux au SIEM ;</li>
+  <li>mettre en place la sauvegarde 3-2-1, les tests de restauration et le plan de reprise d'activité documenté.</li>
+</ul>
+<p>Nous proposons de présenter à l'UIG, avant la remise des offres, un environnement de démonstration sans dépendance extérieure.</p>
+
+<h2><span class="n">5</span>Comparaison avec les autres plateformes</h2>
+<p>Sur les critères du TDR. Les sources et la date de consultation figurent en bas de page.</p>
+<div class="scroll">
+<table>
+  <tr><th>Critère</th><th>Odoo.sh</th><th>Clouds gérés<br><span class="small" style="color:#C4BEDD">ex. Skysize Managed</span></th><th>Plateformes sur site<br><span class="small" style="color:#C4BEDD">ex. Skysize On-Premise</span></th><th>Ordomatics</th></tr>
+  <tr><td class="crit">Données sur le territoire sénégalais</td><td>Hébergé par Odoo, pas sur votre site</td><td>Régions : Belgique, France, Afrique du Sud, Singapour, Australie, États-Unis</td><td>Oui, dans votre réseau</td><td class="mine">Oui : serveurs de l'ISRA ou data center agréé (développement spécifique)</td></tr>
+  <tr><td class="crit">Licence logicielle</td><td>Licence Odoo Enterprise par utilisateur</td><td>Licence Enterprise payée à Odoo, en plus</td><td>Licence Enterprise payée à Odoo, en plus</td><td class="mine">Aucune licence de plateforme ; Odoo Community sans licence par utilisateur. Les modules Enterprise éventuels relèvent de l'intégrateur</td></tr>
+  <tr><td class="crit">Paquets système, image personnalisée</td><td>Paquets Python uniquement</td><td>Paquets Python uniquement</td><td>Image personnalisée possible</td><td class="mine">Dockerfile propre à chaque projet</td></tr>
+  <tr><td class="crit">Prix indicatif</td><td>Environ 58 $ par worker et 18 $ par environnement de recette (guides tiers 2026, approximatif)</td><td>À partir de 69 € par mois et par projet</td><td>249 € par mois et par projet, licence annuelle</td><td class="mine">Sur devis</td></tr>
+  <tr><td class="crit">GED et IA dans la plateforme</td><td>Non incluses dans l'hébergement</td><td>Non mentionnées sur leur site</td><td>Non mentionnées sur leur site</td><td class="mine">Dans l'image de base</td></tr>
+  <tr><td class="crit">Support à Dakar</td><td>Non précisé</td><td>Non précisé</td><td>Non précisé</td><td class="mine">Oui</td></tr>
+</table>
+</div>
+<p class="small">« Non précisé » et « Non mentionnées » signifient que l'information ne figure pas dans les pages consultées, pas que la fonction est absente.</p>
+
+<h2><span class="n">6</span>Périmètre et limites</h2>
+<ul>
+  <li>Ordomatics ne fournit pas les modules fonctionnels (comptabilité paramétrée, budget, paie, patrimoine, marchés) ni la migration des données : ils relèvent de l'intégrateur.</li>
+  <li>Nous ne disposons pas d'une certification ISO 27001. Nos pratiques seront décrites au regard de la PSSI v1.0 de l'ISRA dans la matrice de traçabilité.</li>
+  <li>Le fonctionnement hors ligne n'est pas natif (section 3).</li>
+</ul>
+
+<h2><span class="n">7</span>Ce que nous proposons</h2>
+<ol>
+  <li><b>Une séance technique à l'UIG</b> : démonstration du parcours de livraison, des environnements de test, et d'une sauvegarde suivie d'une restauration.</li>
+  <li><b>Des questions écrites à la séance de clarification</b> :
+    <ul>
+      <li>les sites concernés par le mode dégradé et leurs débits réels ;</li>
+      <li>l'option d'hébergement préférée : A, B ou C ;</li>
+      <li>le rôle d'un fournisseur de plateforme auprès de l'intégrateur, et la prise en compte de ses références ;</li>
+      <li>le nombre d'environnements attendus (développement, recette, pilote, production) ;</li>
+      <li>le périmètre de la GED en Phase 2 au regard de Maarch.</li>
+    </ul>
+  </li>
+  <li><b>Un environnement de démonstration</b> à la disposition de l'UIG et des intégrateurs.</li>
+</ol>
+<p>En attendant : la <a href="/pitch/?lang=fr">présentation de la plateforme</a> et le <a href="/fr/start/getting-started/">guide de démarrage</a>, avec une vidéo de bout en bout.</p>
+
+<footer>
+  <p><b>Sources, consultées le 9 octobre 2026.</b> Odoo.sh : <a href="https://www.odoo.com/documentation/18.0/administration/odoo_sh/advanced.html">documentation Odoo, conteneurs</a> ; prix : guides tiers 2026, approximatifs. Skysize : <a href="https://skysize.io/pricing">skysize.io/pricing</a> et <a href="https://skysize.io/features/deployments">skysize.io/features/deployments</a>, prix en euros hors TVA. TDR : TDR-UIG-ERP-ISRA-2026-V3.0, version 3.0 d'avril 2026.</p>
+  <p>Ordomatics · <a href="https://saas.ordomatics.com">saas.ordomatics.com</a> · <a href="https://docs.ordomatics.com">docs.ordomatics.com</a> · <a href="mailto:salam@ordomatics.com">salam@ordomatics.com</a></p>
+</footer>
+
+</div>
+</body>
+</html>
