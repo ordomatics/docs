@@ -89,12 +89,21 @@ const clips = {
 
     // B.1 : la page publique de candidature et le kit de vente (captures)
     async pages() {
-        const { page, finish } = await startClip(null);
-        await page.goto(`${BASE_URL}/affiliation`);
-        await screenshot(page, "bonus-0-devenir-distributeur", { clip: { x: 220, y: 0, width: 1000, height: 560 } });
+        const visitor = await startClip(null);
+        await visitor.page.goto(`${BASE_URL}/affiliation`);
+        await screenshot(visitor.page, "bonus-0-devenir-distributeur", { clip: { x: 220, y: 0, width: 1000, height: 560 } });
+        await visitor.finish();
+        // The kit is for approved sellers only.
+        approveWithCommissions();
+        const { page, finish } = await startClip(null, { storageState: AUTH });
         await page.goto(`${BASE_URL}/affiliation/kit`);
         await page.evaluate(() => document.fonts.ready);
-        await screenshot(page, "bonus-3-kit-de-vente", { clip: { x: 320, y: 0, width: 800, height: 700 } });
+        await page.locator("video.clip").evaluate((video) => new Promise((resolve) => {
+            const poster = new Image();
+            poster.onload = poster.onerror = resolve;
+            poster.src = video.poster;
+        }));
+        await screenshot(page, "bonus-3-kit-de-vente", { clip: { x: 320, y: 0, width: 800, height: 760 } });
         await finish();
     },
 

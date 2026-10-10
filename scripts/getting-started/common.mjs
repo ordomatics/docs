@@ -49,17 +49,17 @@ function heard(text, transcript) {
     return wanted.filter((w) => said.has(w)).length / Math.max(1, wanted.length);
 }
 
-function synthesize(text, seed, file) {
+function synthesize(text, seed, file, language) {
     const out = odooShell(`
 import base64, json
 tool = env['llm.tool'].search([('name', '=', 'soynade_speak')], limit=1)
 res = tool.soynade_speak_execute(json.loads(${JSON.stringify(JSON.stringify({
-        text, target_language: "en", source_language: "en", output_format: "wav", seed,
+        text, target_language: language, source_language: language, output_format: "wav", seed,
     }))}))
 att = env['ir.attachment'].browse(res['urls'][0]['attachment_id'])
 open('/tmp/tuto-voice.wav', 'wb').write(base64.b64decode(att.datas))
 check = env['llm.tool'].search([('name', '=', 'odoo_transcribe')], limit=1)
-heard = check.odoo_transcribe_execute({'attachment_ids': [att.id], 'language': 'en'})
+heard = check.odoo_transcribe_execute({'attachment_ids': [att.id], 'language': '${language}'})
 att.unlink()
 env.cr.commit()
 print("HEARD:" + (heard.get('results') or [{}])[0].get('transcript', ''))
@@ -69,13 +69,13 @@ print("HEARD:" + (heard.get('results') or [{}])[0].get('transcript', ''))
 }
 
 /**
- * A cached narration line in Soynade's default English voice. A take is kept
+ * A cached narration line in Soynade's default voice ("en" or "fr"). A take is kept
  * only if a transcription of it starts like the text and contains most of it,
  * and it is no longer than the words need: the model sometimes prepends a word
  * or runs on past the text.
  */
-export async function voiceLine(text) {
-    const dir = path.join(HERE, "voices/en");
+export async function voiceLine(text, language = "en") {
+    const dir = path.join(HERE, "voices", language);
     const key = crypto.createHash("sha1").update(text).digest("hex").slice(0, 12);
     const out = path.join(dir, `${key}.wav`);
     if (fs.existsSync(out)) {
@@ -84,7 +84,7 @@ export async function voiceLine(text) {
     fs.mkdirSync(dir, { recursive: true });
     const raw = path.join(dir, `${key}.raw.wav`);
     for (const seed of [7, 11, 23, 42, 5, 99]) {
-        const transcript = synthesize(text, seed, raw);
+        const transcript = synthesize(text, seed, raw, language);
         execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", raw, "-af",
             "silenceremove=start_periods=1:start_threshold=-45dB,areverse,"
             + "silenceremove=start_periods=1:start_threshold=-45dB,areverse", "-ar", "48000", "-ac", "1", out]);
