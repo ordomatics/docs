@@ -73,6 +73,7 @@ export default defineConfig({
               items: [
                 { label: "Overview", slug: "start/manage-your-project" },
                 { label: "Onboard a client", slug: "start/onboard-a-client" },
+                { label: "Add a test environment", slug: "start/add-a-test-environment" },
               ],
             },
             {

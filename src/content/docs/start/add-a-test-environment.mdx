@@ -1,0 +1,102 @@
+---
+title: Add a test environment
+description: Try a change on a copy of all your live databases before it reaches production.
+---
+
+import StepVideo from "../../../components/StepVideo.astro";
+
+A test environment is a second copy of your project, with a copy of **every database your
+production serves**: your own, and one for each client you have onboarded. You try new features
+and bug fixes there, on real data, without touching the live databases. When you are happy, you
+merge to `main` and the same code reaches production.
+
+<StepVideo dir="manage" src="add-a-test-environment.mp4" caption="Adding a test environment, start to finish. The waiting is played fast; the video has no sound." />
+
+## Why you want one
+
+- **Real data, not an empty database.** Bugs show up on your clients' own data, and a new feature
+  can be judged against what is really there.
+- **Nothing you do reaches production.** The copies are separate databases on separate servers.
+  Delete a record, break a module, run a migration: the live databases do not notice.
+- **Nothing leaves the building.** Mail, scheduled actions and payments are switched off in the
+  copies, so a test cannot email a client or take a payment.
+
+## How a change gets to production
+
+Once a test environment exists, your Git branches map onto your environments:
+
+1. **Work on `dev`.** Every push builds your image and checks that Odoo starts with it.
+2. **The test environment runs that image.** Each push to `dev` is deployed to it, so you open the
+   test addresses and try the change on the copies of your databases.
+3. **Release.** When you are happy, fast-forward `main` to `dev` and push, exactly as in
+   [Getting Started](/start/getting-started/#7-release-to-production). Production gets the image
+   you just tested. Nothing is rebuilt.
+
+If no test environment exists, a push to `dev` still builds and tests the image. It is simply not
+deployed anywhere until there is one.
+
+## Before you start
+
+You need a project that is **Ready**. To have clients in the copy, onboard them first: see
+[Onboard a client](/start/onboard-a-client/).
+
+## 1. Add the environment
+
+In the portal, open **Projects**, then your project. Under **Add an environment**, choose
+`test` and press **Create**.
+
+The project page lists the new environment straight away. Behind the scenes the platform copies
+every database, switches off mail, scheduled actions and payments in each copy, and only then
+starts the servers.
+
+## 2. Wait for it to run
+
+The environment moves from **Setting up…** to **Running**. That takes several minutes.
+
+The addresses are published a moment later: for the first minute or two after it reads
+**Running**, opening one may show an error page. Refresh and it appears.
+
+## 3. Open the copies
+
+The project's own copy has the address
+`https://<project>.test.ordomatics.com`. Each client keeps the address it has in production, with
+`test` after the project name:
+
+| | Production | Test environment |
+|---|---|---|
+| Your project | `https://ged.ordomatics.com` | `https://ged.test.ordomatics.com` |
+| A client called Baobab | `https://baobab.ged.ordomatics.com` | `https://baobab.ged.test.ordomatics.com` |
+
+Sign in with the same accounts you use in production: it is a copy of the same data.
+
+Open the environment's own page (**Edit** on its card) to see all the copies, each with its
+address and status.
+
+## 4. Try your change
+
+Push to `dev` and watch the test environment pick up the new image. Open the addresses above and
+test it on the copy of your own database and of each client that matters.
+
+## Afterwards
+
+On the environment's page, each copy has:
+
+- **Refresh**: replaces that copy with a fresh copy of your live data. Do this before a new round
+  of testing: a copy is a snapshot taken when the environment was created.
+- **Erase**: empties the copy and reinstalls a fresh Ordomatics, for starting from nothing.
+- **Pause** and **Delete**: stop serving one copy, or remove it.
+
+**Pause servers** stops the whole environment without losing anything, and **Resume servers**
+brings it back. **Remove**, at the bottom of the left column, deletes the environment: its
+servers, its addresses and its copy of your data. You confirm by typing your project's name. Your
+live environment is untouched.
+
+:::note
+A client you onboard after the environment was created is not in it, because the copy was taken
+earlier. Remove the environment and add it again to bring that client in.
+:::
+
+:::caution
+Every environment runs its own servers, so it uses memory that the platform has to find. Pause or
+remove a test environment when you are not using it.
+:::
