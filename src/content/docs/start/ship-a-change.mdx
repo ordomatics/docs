@@ -1,0 +1,128 @@
+---
+title: Ship a change
+description: Develop a feature or a fix, try it on your test environment, then release it to production.
+---
+
+import StepVideo from "../../../components/StepVideo.astro";
+
+Every change to your project takes the same path: write it on `dev`, try it on your own computer,
+push it, try it on the **test environment**, and only then release it to production. Production
+does not move until you decide.
+
+A new feature and a bug fix are the same path. This page follows a small feature, a **Filed on**
+date on documents, from the first edit to the live site.
+
+## Before you start
+
+You need:
+
+- a project that is **Ready** and connected to its GitHub repository, as in
+  [Getting Started](/start/getting-started/);
+- a [test environment](/start/add-a-test-environment/), so that your pushes to `dev` have
+  somewhere to land.
+
+## Part 1: make the change and test it
+
+<StepVideo dir="manage" src="ship-a-change-test.mp4" caption="From the first edit to the change running on the test environment. The waiting is played fast; the video has no sound." />
+
+### 1. Change the code
+
+On the `dev` branch, edit your module. Here, a new field on documents in
+`addons/ged/models/dms_file.py`:
+
+```python
+ged_filed_on = fields.Date(
+    string='Filed on', copy=False, default=fields.Date.context_today,
+    help='The day the document was filed.')
+```
+
+and the same field in the form and list views in `addons/ged/views/dms_file_views.xml`.
+
+`git diff` shows exactly what you are about to ship.
+
+### 2. Try it locally
+
+Restart Odoo. It updates your module as it starts:
+
+```bash
+docker compose restart odoo
+```
+
+Open `http://localhost:8069`, sign in and open a new document: the field is there. If it is not,
+fix it here, where nothing else is affected.
+
+### 3. Commit and push to `dev`
+
+```bash
+git add -A
+git commit -m "GED: record the day a document was filed"
+git push
+```
+
+### 4. CI builds and tests your image
+
+Every push to `dev` builds your image and checks that Odoo starts with it. Follow the run on your
+repository's **Actions** tab. If it fails, nothing is deployed: the test environment keeps running
+what it had.
+
+### 5. The test environment runs it
+
+When the run passes, the image is deployed to your test environment, a few minutes later. In the
+portal, open your project, then the **test** environment: **Code & deploy** shows the new
+version, and its state goes from **Running** to **Updating** and back to **Up to date** once the
+servers have restarted. Each client's copy is upgraded after that, so its address can take a few
+minutes longer than your own.
+
+### 6. Try it on the copies
+
+Open the test addresses and sign in with your usual accounts:
+
+- `https://ged.test.ordomatics.com`: your own database;
+- `https://teranga.ged.test.ordomatics.com`: a client's copy.
+
+The new field is there, on real data, and nothing live has changed. A red banner at the top of
+every copy, **Database neutralized for testing: no emails sent, etc.**, tells you mail, scheduled
+actions and payments are switched off.
+
+Go back to step 1 as many times as you need: each push replaces what the test environment runs.
+
+## Part 2: release it
+
+<StepVideo dir="manage" src="ship-a-change-release.mp4" caption="Releasing the tested change to production. The waiting is played fast; the video has no sound." />
+
+### 1. Fast-forward `main` to `dev`
+
+When you are happy with it on the test environment:
+
+```bash
+git switch main
+git merge --ff-only dev
+git push
+git switch dev
+```
+
+### 2. Production runs the image you tested
+
+The release run does not rebuild anything: it takes the image `dev` built and tested, and
+promotes it to production. In the portal, open the **production** environment and wait for
+**Up to date**. Your servers restart once, so your project is unavailable for a minute while that
+happens. Then each client's database is upgraded to the new version, one after the other; the
+list shows **Upgrading…** until it is done.
+
+### 3. Check the live site
+
+Open `https://ged.ordomatics.com`, or a client's address such as
+`https://teranga.ged.ordomatics.com`: the new field is live, on every database.
+
+:::note
+A client whose **Auto-upgrade** is off keeps its current version until you upgrade it from the
+project's page. Auto-upgrade is on by default.
+:::
+
+## When something goes wrong
+
+- **The `dev` run fails:** read its log on GitHub, fix, push again. Nothing was deployed.
+- **It works locally but not on the test environment:** that is what the test environment is for.
+  Fix it on `dev` and push: production has not seen it.
+- **You release and regret it:** fix forward. Make the correction on `dev`, check it on the test
+  environment, and release again.
