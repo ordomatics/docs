@@ -81,6 +81,7 @@ export default defineConfig({
               label: "Advanced",
               translations: { fr: "Avancé" },
               items: [
+                { label: "Prepare your server", slug: "start/prepare-your-server" },
                 { label: "Bring Your Own Postgres", slug: "start/byo-postgres" },
                 { label: "Bring Your Own Cluster", slug: "start/byo-cluster" },
               ],
