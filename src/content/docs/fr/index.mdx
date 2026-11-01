@@ -1,33 +1,46 @@
 ---
 title: Ordomatics
-description: Un ERP Odoo 18 complet, piloté depuis WhatsApp.
+description: Construisez votre Odoo une fois, déployez-le chez chaque client. Documentation pour développeurs et partenaires.
 template: splash
 hero:
-  tagline: Un ERP Odoo 18 complet — stocks, comptabilité, CRM, RH — que vous pilotez depuis WhatsApp.
+  tagline: Construisez votre Odoo une fois, déployez-le chez chaque client. Votre environnement vit dans git, et ce qui marche sur votre ordinateur tourne en production après un push.
   actions:
     - text: Commencer
       link: /fr/start/getting-started/
       icon: right-arrow
+    - text: Tarifs
+      link: https://saas.ordomatics.com/pricing
+      icon: external
+      variant: secondary
     - text: Écrivez-nous sur WhatsApp
       link: https://wa.me/221773649575
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-<CardGrid stagger>
-  <Card title="Commencer" icon="rocket">
-    Comment démarrer votre projet, votre environnement et votre CI/CD.
-    [Commencer](/fr/start/getting-started/)
-  </Card>
-  <Card title="Guides" icon="open-book">
-    Des marches à suivre pour le travail quotidien.
-  </Card>
-  <Card title="Référence" icon="setting">
-    Formules, limites et détails techniques.
-  </Card>
-  <Card title="Blog" icon="comment">
-    Nouveautés et travaux en cours.
-  </Card>
+## Construire et déployer
+
+<CardGrid>
+  <LinkCard
+    title="Commencer"
+    description="Créez un projet, lancez-le en local, poussez sur dev, publiez en production."
+    href="/fr/start/getting-started/"
+  />
+  <LinkCard
+    title="Pour vos clients"
+    description="Les tutoriels de l'éditeur de documents Smartacus."
+    href="/fr/editeur/"
+  />
+  <LinkCard
+    title="Assistant WhatsApp"
+    description="Pilotez l'ERP depuis WhatsApp."
+    href="/fr/guides/whatsapp/"
+  />
+  <LinkCard
+    title="Blog"
+    description="Articles techniques et travaux en cours."
+    href="/blog/"
+  />
 </CardGrid>

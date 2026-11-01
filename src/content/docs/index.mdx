@@ -1,33 +1,81 @@
 ---
 title: Ordomatics
-description: A full Odoo 18 ERP you run over WhatsApp.
+description: Build Odoo once, deploy it to every client. Docs for developers and partners.
 template: splash
 hero:
-  tagline: A full Odoo 18 ERP — inventory, accounting, CRM, HR — that you run from WhatsApp.
+  tagline: Build your Odoo once, deploy it to every client. Your environment lives in git, and what works on your laptop runs in production after a push.
   actions:
     - text: Get started
       link: /start/getting-started/
       icon: right-arrow
+    - text: Pricing
+      link: https://saas.ordomatics.com/pricing
+      icon: external
+      variant: secondary
     - text: Talk to us on WhatsApp
       link: https://wa.me/221773649575
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-<CardGrid stagger>
-  <Card title="Start here" icon="rocket">
-    How to get your project, environment and CI/CD running.
-    [Getting Started](/start/getting-started/)
-  </Card>
-  <Card title="Guides" icon="open-book">
-    Task-by-task walkthroughs for day-to-day work.
-  </Card>
-  <Card title="Reference" icon="setting">
-    Plans, limits and technical detail.
-  </Card>
-  <Card title="Blog" icon="comment">
-    Release notes and what we are working on.
-  </Card>
+## Build and deploy
+
+<CardGrid>
+  <LinkCard
+    title="Get started"
+    description="Create a project, run it locally, push to dev, release to production."
+    href="/start/getting-started/"
+  />
+  <LinkCard
+    title="Onboard a client"
+    description="Give each of your customers their own Odoo database and address."
+    href="/start/onboard-a-client/"
+  />
+  <LinkCard
+    title="Ship a change"
+    description="From a commit to your test environment to the live site."
+    href="/start/ship-a-change/"
+  />
+  <LinkCard
+    title="Prepare your server"
+    description="Bring your own Postgres or Kubernetes cluster: what to set up first."
+    href="/start/prepare-your-server/"
+  />
+</CardGrid>
+
+## How it works
+
+<CardGrid>
+  <LinkCard
+    title="Your environment is code"
+    description="A Dockerfile you can change, deployed with a git push."
+    href="/blog/your-environment-is-code/"
+  />
+  <LinkCard
+    title="One application per sector"
+    description="49€ per application, 25€ for each additional client."
+    href="/blog/one-project-per-sector/"
+  />
+</CardGrid>
+
+## For your clients
+
+<CardGrid>
+  <LinkCard
+    title="Smartacus editor"
+    description="Tutorials for the document editor your clients use."
+    href="/editeur/"
+  />
+  <LinkCard
+    title="WhatsApp assistant"
+    description="Run the ERP from WhatsApp."
+    href="/guides/whatsapp/"
+  />
+  <LinkCard
+    title="Blog"
+    description="Technical write-ups and what we are working on."
+    href="/blog/"
+  />
 </CardGrid>
