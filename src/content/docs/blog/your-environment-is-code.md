@@ -76,10 +76,14 @@ laptop, where it is cheap.
 ## What it does not do
 
 It is fair to say what you give up. A change to the system now means a rebuild and a
-redeploy, which is slower than typing a command on a live machine. And if you want to
-poke at a running server, you do it through the logs and the portal, not an SSH
-session. We think that trade is worth it, and it is the reason the rest works, but it
-is a trade.
+redeploy, which is slower than typing a command on a live machine.
+
+On the shared platform you work through the logs and the portal, not a shell on the
+server. On a dedicated cluster, yours or one we run for you, you do have access to the
+pods and can change a running one by hand. We do not recommend it. A change made inside
+a pod is lost at the next deploy and appears in no history, so nobody can review it or
+repeat it. Keep code and environment configuration in git: it is also the safer way to
+work, because every change is visible, attributable and reversible.
 
 ## Where to start
 
