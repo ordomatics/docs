@@ -9,7 +9,7 @@ the same system throughout, so there is nothing to re-import and nobody to retra
 
 | | Business | Developer | Partner |
 |---|---|---|---|
-| **Price** | 0€, plus usage credits | 49€ a month per application | 395€ a month |
+| **Price** | 0€, plus usage credits | 49€ a month per deployment | 395€ a month |
 | **Users** | 1 per company | Unlimited | Unlimited |
 | **Database** | Shared, isolated per company | Dedicated | Dedicated |
 | **App and updates** | Shared, updates reach you automatically | Your own application | Your own applications |
@@ -19,14 +19,15 @@ the same system throughout, so there is nothing to re-import and nobody to retra
 
 ## Business
 
-Your company on our shared Odoo, with nothing to run. You pay for what you use with
+Your company on our shared Odoo, with nothing to run. It includes Smartacus Pro, a point
+of sale, WhatsApp, an AI assistant, calls and SMS. You pay for what you use with
 prepaid credits: you top up and draw down against actual use, with no annual commitment.
 
 ## Developer
 
 For developers who build their own modules. An **application** is your repository, your
-Dockerfile, a test environment and a live site. The first client is included in the 49€
-a month, and each additional client of the application costs 25€.
+Dockerfile, a test environment and a live site. Each deployment costs
+49€ a month.
 
 You get a dedicated database, a dedicated GitHub repository for your custom modules,
 CI/CD (push to `dev` to test, merge to `main` to release), test environments, and the

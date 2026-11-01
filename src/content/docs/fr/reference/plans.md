@@ -9,7 +9,7 @@ migration : c'est le même système, donc rien à réimporter et personne à ref
 
 | | Business | Developer | Partner |
 |---|---|---|---|
-| **Prix** | 0 €, plus crédits d'usage | 49 € par mois et par application | 395 € par mois |
+| **Prix** | 0 €, plus crédits d'usage | 49 € par mois par déploiement | 395 € par mois |
 | **Utilisateurs** | 1 par entreprise | Illimités | Illimités |
 | **Base de données** | Partagée, isolée par entreprise | Dédiée | Dédiée |
 | **Application et mises à jour** | Partagées, les mises à jour vous arrivent seules | Votre application | Vos applications |
@@ -19,16 +19,16 @@ migration : c'est le même système, donc rien à réimporter et personne à ref
 
 ## Business
 
-Votre entreprise sur notre Odoo partagé, sans rien à gérer. Vous payez ce que vous
+Votre entreprise sur notre Odoo partagé, sans rien à gérer. Smartacus Pro, une caisse,
+WhatsApp, un assistant IA, les appels et les SMS sont inclus. Vous payez ce que vous
 utilisez avec des crédits prépayés : vous rechargez et consommez selon l'usage réel,
 sans engagement annuel.
 
 ## Developer
 
 Pour les développeurs qui construisent leurs propres modules. Une **application**, c'est
-votre dépôt, votre Dockerfile, un environnement de test et un site en production. Le
-premier client est inclus dans les 49 € par mois, et chaque client supplémentaire de
-l'application coûte 25 €.
+votre dépôt, votre Dockerfile, un environnement de test et un site en production. Chaque
+déploiement coûte 49 € par mois.
 
 Vous avez une base de données dédiée, un dépôt GitHub dédié pour vos modules, du CI/CD
 (poussez sur `dev` pour tester, fusionnez sur `main` pour publier), des environnements de

@@ -1,7 +1,7 @@
 ---
 title: "One application per sector: build your Odoo once, deploy it to every client"
 date: 2026-11-01
-excerpt: 49€ per application, then 25€ for each additional client. What an application is, and how many clients can share one.
+excerpt: Build an application once for a sector, then give each client their own database. What an application is, and how many clients can share one.
 authors:
   - name: Moctar Diallo
     title: Founder, Ordomatics
@@ -32,11 +32,12 @@ That suggests how to organise the work: **one application per sector.**
 
 ## What it costs
 
-**49€ a month per application**, which includes its first client. Then **25€ a month for
-each additional client** of that application.
+**49€ a month per deployment.** The application with its first client is one deployment,
+and each additional client is another.
 
-So the first pharmacy carries the cost of building the application. The second, third and
-twentieth pharmacy cost 25€ each, and you do not repeat any of the setup.
+What you do not pay for twice is the work. The first pharmacy carries the cost of building
+the application; the second, third and twentieth get it as it is, and you do not repeat any
+of the setup.
 
 **Users are not charged.** Each client's database can have as many users as it needs. The
 one exception is Odoo Enterprise: if you bring in Enterprise modules, Odoo's own licence
@@ -68,7 +69,7 @@ You fix a bug in the pharmacy application once, not twenty times.
 ## How many clients can share an application
 
 As many as you have. There is no limit on the number of clients per application, and the
-price per client stays 25€ however many you add.
+price per client stays the same however many you add.
 
 Clients share the application's servers, so what grows with them is the load, not a
 count. A busy client uses more than a quiet one, and a larger set of clients needs larger
