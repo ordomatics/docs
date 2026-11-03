@@ -16,7 +16,7 @@ migration : c'est le même système, donc rien à réimporter et personne à ref
 | **Personnalisation** | Aucune | Vos modules et votre Dockerfile | Vos modules et votre Dockerfile |
 | **Applications** | | Une par abonnement | Illimitées |
 | **Cluster** | Partagé | Partagé | Votre propre cluster Kubernetes |
-| **Code et images** | | Un dépôt GitHub | Votre propre GitHub, et votre propre GitLab pour les images |
+| **Code, images et sauvegardes** | | Un dépôt GitHub | Votre propre GitHub, et votre propre GitLab pour les images et les sauvegardes |
 
 ## Business
 
@@ -44,15 +44,15 @@ utilisez des modules Enterprise, la licence d'Odoo s'applique.
 déploient Odoo chez leurs clients. Vous apportez les éléments :
 
 - **Votre code** : sur votre propre GitHub.
-- **Vos images** : construites dans votre propre registre GitLab.
+- **Vos images et vos sauvegardes** : dans votre propre GitLab.
 - **Votre cluster Kubernetes** : Linode, AWS, Azure, Google Cloud, DigitalOcean, ou même
   un ordinateur portable.
 - **Votre Postgres** : Neon, Supabase, une base cloud ou une base locale.
 
 Nous apportons l'orchestration qui mène votre Odoo du développement à la production :
 builds, environnements de test, mises en production, mises à jour et arrivée des clients.
-Votre code, vos images, vos serveurs et vos données restent à vous ; nous ne
-faisons qu'orchestrer.
+Votre code, vos images, vos sauvegardes, vos serveurs et vos données restent à
+vous ; nous ne faisons qu'orchestrer.
 
 Vous maîtrisez vos coûts d'infrastructure, car vous payez directement vos fournisseurs,
 et vous déployez autant d'applications Odoo que vous voulez, pour autant de clients que

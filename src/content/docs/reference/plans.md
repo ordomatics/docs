@@ -16,7 +16,7 @@ the same system throughout, so there is nothing to re-import and nobody to retra
 | **Customization** | None | Your modules and your Dockerfile | Your modules and your Dockerfile |
 | **Applications** | | One per subscription | Unlimited |
 | **Cluster** | Shared | Shared | Your own Kubernetes cluster |
-| **Code and images** | | A GitHub repository | Your own GitHub, and your own GitLab for images |
+| **Code, images and backups** | | A GitHub repository | Your own GitHub, and your own GitLab for images and backups |
 
 ## Business
 
@@ -46,15 +46,15 @@ applications and clients.
 Odoo for their clients. You bring the pieces:
 
 - **Your code**: on your own GitHub.
-- **Your images**: built into your own GitLab registry.
+- **Your images and backups**: in your own GitLab.
 - **Your Kubernetes cluster**: Linode, AWS, Azure, Google Cloud, DigitalOcean, or even a
   laptop. See [connect your own cluster](/start/byo-cluster/).
 - **Your Postgres**: Neon, Supabase, a cloud database or a local one. See
   [bring your own database](/start/byo-postgres/).
 
 We bring the orchestration that takes your Odoo from development to production: builds,
-test environments, releases, upgrades and client onboarding. Your code, images, servers
-and data stay yours; we only orchestrate.
+test environments, releases, upgrades and client onboarding. Your code, images, backups,
+servers and data stay yours; we only orchestrate.
 
 You control your infrastructure costs, because you pay your providers directly, and you
 deploy any number of Odoo applications for any number of clients. Custom infrastructure
