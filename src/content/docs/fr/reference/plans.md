@@ -49,6 +49,9 @@ déploient Odoo chez leurs clients. Vous apportez les éléments :
   un ordinateur portable.
 - **Votre Postgres** : Neon, Supabase, une base cloud ou une base locale.
 
+Vous les connectez une fois, sur votre compte, et chaque application les utilise : voir
+[Partner : préparer votre infrastructure](/start/partner-infrastructure/) (en anglais).
+
 Nous apportons l'orchestration qui mène votre Odoo du développement à la production :
 builds, environnements de test, mises en production, mises à jour et arrivée des clients.
 Votre code, vos images, vos sauvegardes, vos serveurs et vos données restent à

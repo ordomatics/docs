@@ -48,9 +48,11 @@ Odoo for their clients. You bring the pieces:
 - **Your code**: on your own GitHub.
 - **Your images and backups**: in your own GitLab.
 - **Your Kubernetes cluster**: Linode, AWS, Azure, Google Cloud, DigitalOcean, or even a
-  laptop. See [connect your own cluster](/start/byo-cluster/).
-- **Your Postgres**: Neon, Supabase, a cloud database or a local one. See
-  [bring your own database](/start/byo-postgres/).
+  laptop.
+- **Your Postgres**: Neon, Supabase, a cloud database or a local one.
+
+You connect them once, on your account, and every application uses them: see
+[Partner: set up your infrastructure](/start/partner-infrastructure/).
 
 We bring the orchestration that takes your Odoo from development to production: builds,
 test environments, releases, upgrades and client onboarding. Your code, images, backups,

@@ -32,24 +32,23 @@ kubectl get ingressclass                         # nothing else claiming ingress
 On MicroK8s, write `microk8s kubectl` for every `kubectl` in this page, and
 `microk8s enable dns hostpath-storage` first (not `ingress`).
 
-## 2. Create the project on your cluster
+## 2. Add the cluster on your account
 
-1. In the [portal](https://odoo.ordomatics.com), open **Projects** and click **Create a project**.
-2. Give it a **name** and an **address**. The address is permanent.
-3. Open **Servers** and choose **Your Kubernetes cluster**.
-4. Type a **cluster name**, for example `onprem`.
-5. Leave **Database** as ours, or choose **Yours** (see [Bring Your Own Postgres](/start/byo-postgres/)).
-6. Click **Create project**.
+Running applications on your own cluster comes with the
+[Partner plan](/reference/plans/#partner).
 
-Setup runs until it needs your cluster, then stops with the notice **Setup is waiting for
-you**. Nothing is wrong; it needs steps 3 and 4 below. While it waits, the step list shows
-**Preparing the connection to your cluster**, and later **Waiting for your cluster to
-answer…** until it connects.
+1. In the [portal](https://odoo.ordomatics.com), open **Projects**, then
+   **Your infrastructure**.
+2. In the **Clusters** card, type a **cluster name**, for example `onprem`, and click
+   **Connect a cluster**.
+
+The rest of the account's setup (GitLab, Postgres server) is in
+[Partner: set up your infrastructure](/start/partner-infrastructure/).
 
 ## 3. Run the four commands
 
-On the project page, the **Your own clusters** card shows your cluster as **Waiting for
-you**, with four commands and your tunnel key already filled in. Each has a **Copy**
+The cluster shows as **Waiting for you**, with four commands and your tunnel key already
+filled in. Each has a **Copy**
 button, and **Copy all four** copies the lot. Run them, in order, on your cluster:
 
 | # | What it does | Command |
@@ -80,19 +79,17 @@ Kubernetes version. The check refuses a cluster older than 1.29, or a token that
 create namespaces, cluster roles and custom resource definitions, and says which. Applying
 step 3 again grants the latter.
 
-Setup then continues by itself: it installs the ingress controller, builds the namespace
-and starts your Odoo. When the page says **Ready**, open
-`https://<address>.ordomatics.com`. Check on the cluster:
+We then install the ingress controller on it. Each application you
+[create on it](/start/partner-infrastructure/#4-create-an-application) gets a namespace of
+its own; when its page says **Ready**, open `https://<address>.ordomatics.com`. Check on
+the cluster:
 
 ```bash
 kubectl get pods -A | grep -v kube-system
 ```
 
 You should see the connector in `ordomatics-system`, `ingress-nginx` pods, and your
-project's pods (server, worker, longpolling, Redis) in a namespace of their own.
-
-Then continue with [Getting started](/start/getting-started/#2-create-your-repository)
-from step 2: create your repository, connect GitHub and ship your module.
+application's pods (server, worker, longpolling, Redis) in a namespace of their own.
 
 ### If it doesn't connect
 

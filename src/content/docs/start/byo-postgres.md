@@ -7,8 +7,9 @@ Your data stays on your server. Ordomatics runs Odoo, and Odoo connects to a Pos
 database that you own and back up. This page goes from an empty server to a running site.
 Replace `myproject` and the example host with your own.
 
-If you also want your own Kubernetes cluster, do this page first, then
-[Bring Your Own Cluster](/start/byo-cluster/).
+This page is one database per project, which you create. On the Partner plan, you connect
+your Postgres server once and we create each application's database on it: see
+[Partner: set up your infrastructure](/start/partner-infrastructure/).
 
 ## 1. Prepare the database server
 
@@ -57,8 +58,7 @@ this fails, the portal's check fails the same way: fix it here first.
    - **Database:** `myproject`.
    - **User:** `odoo`.
    - **Password:** the one you set.
-5. Leave **Servers** as ours (or see [Bring Your Own Cluster](/start/byo-cluster/)).
-6. Click **Create project**.
+5. Click **Create project**.
 
 The setup page follows along on its own. Among the steps you will see
 **Checking your database**: we connect to it before anything is built.
