@@ -9,13 +9,14 @@ migration : c'est le même système, donc rien à réimporter et personne à ref
 
 | | Business | Developer | Partner |
 |---|---|---|---|
-| **Prix** | 0 €, plus crédits d'usage | 49 € par mois par déploiement | 395 € par mois |
+| **Prix** | 0 €, plus crédits d'usage | 49 € par mois par déploiement | 3950 € par an, ou 395 € par mois |
 | **Utilisateurs** | 1 par entreprise | Illimités | Illimités |
-| **Base de données** | Partagée, isolée par entreprise | Dédiée | Dédiée |
+| **Base de données** | Partagée, isolée par entreprise | Dédiée | Votre propre Postgres |
 | **Application et mises à jour** | Partagées, les mises à jour vous arrivent seules | Votre application | Vos applications |
 | **Personnalisation** | Aucune | Vos modules et votre Dockerfile | Vos modules et votre Dockerfile |
 | **Applications** | | Une par abonnement | Illimitées |
-| **Cluster** | Partagé | Partagé | Dédié, ou le vôtre |
+| **Cluster** | Partagé | Partagé | Votre propre cluster Kubernetes |
+| **Code et images** | | Un dépôt GitHub | Votre propre GitHub, et votre propre GitLab pour les images |
 
 ## Business
 
@@ -39,12 +40,28 @@ utilisez des modules Enterprise, la licence d'Odoo s'applique.
 
 ## Partner
 
-Tout Developer, pour les équipes qui déploient Odoo chez leurs clients sur leur propre
-infrastructure : applications illimitées, un cluster dédié (ou votre propre cluster
-Kubernetes), un jour par semaine de support d'infrastructure sur mesure, et les
-migrations de plateforme. Vous payez le cluster lui-même.
+**Votre infrastructure, notre orchestration.** Tout Developer, pour les équipes qui
+déploient Odoo chez leurs clients. Vous apportez les éléments :
+
+- **Votre code** : sur votre propre GitHub.
+- **Vos images** : construites dans votre propre registre GitLab.
+- **Votre cluster Kubernetes** : Linode, AWS, Azure, Google Cloud, DigitalOcean, ou même
+  un ordinateur portable.
+- **Votre Postgres** : Neon, Supabase, une base cloud ou une base locale.
+
+Nous apportons l'orchestration qui mène votre Odoo du développement à la production :
+builds, environnements de test, mises en production, mises à jour et arrivée des clients.
+Votre code, vos images, vos serveurs et vos données restent à vous ; nous ne
+faisons qu'orchestrer.
+
+Vous maîtrisez vos coûts d'infrastructure, car vous payez directement vos fournisseurs,
+et vous déployez autant d'applications Odoo que vous voulez, pour autant de clients que
+vous voulez. Un jour par semaine de support d'infrastructure sur mesure et les migrations
+de plateforme sont inclus.
+
+Partner coûte **3950 € par an**, notre meilleur prix, ou 395 € par mois.
 
 ## Facturation
 
-Business est facturé en crédits prépayés. Developer et Partner sont des abonnements
-mensuels.
+Business est facturé en crédits prépayés. Developer est un abonnement par déploiement.
+Partner est un abonnement annuel ou mensuel.

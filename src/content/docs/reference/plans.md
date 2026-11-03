@@ -9,13 +9,14 @@ the same system throughout, so there is nothing to re-import and nobody to retra
 
 | | Business | Developer | Partner |
 |---|---|---|---|
-| **Price** | 0€, plus usage credits | 49€ a month per deployment | 395€ a month |
+| **Price** | 0€, plus usage credits | 49€ a month per deployment | 3950€ a year, or 395€ a month |
 | **Users** | 1 per company | Unlimited | Unlimited |
-| **Database** | Shared, isolated per company | Dedicated | Dedicated |
+| **Database** | Shared, isolated per company | Dedicated | Your own Postgres |
 | **App and updates** | Shared, updates reach you automatically | Your own application | Your own applications |
 | **Customization** | None | Your modules and your Dockerfile | Your modules and your Dockerfile |
 | **Applications** | | One per subscription | Unlimited |
-| **Cluster** | Shared | Shared | Dedicated, or your own |
+| **Cluster** | Shared | Shared | Your own Kubernetes cluster |
+| **Code and images** | | A GitHub repository | Your own GitHub, and your own GitLab for images |
 
 ## Business
 
@@ -41,11 +42,27 @@ applications and clients.
 
 ## Partner
 
-Everything in Developer, for teams that deploy Odoo for their clients on infrastructure of
-their own: unlimited applications, a dedicated cluster (or
-[your own Kubernetes cluster](/start/byo-cluster/)), custom infrastructure support one day
-a week, and platform migrations. You pay for the cluster itself.
+**Your infrastructure, our orchestration.** Everything in Developer, for teams that deploy
+Odoo for their clients. You bring the pieces:
+
+- **Your code**: on your own GitHub.
+- **Your images**: built into your own GitLab registry.
+- **Your Kubernetes cluster**: Linode, AWS, Azure, Google Cloud, DigitalOcean, or even a
+  laptop. See [connect your own cluster](/start/byo-cluster/).
+- **Your Postgres**: Neon, Supabase, a cloud database or a local one. See
+  [bring your own database](/start/byo-postgres/).
+
+We bring the orchestration that takes your Odoo from development to production: builds,
+test environments, releases, upgrades and client onboarding. Your code, images, servers
+and data stay yours; we only orchestrate.
+
+You control your infrastructure costs, because you pay your providers directly, and you
+deploy any number of Odoo applications for any number of clients. Custom infrastructure
+support one day a week and platform migrations are included.
+
+Partner costs **3950€ a year**, our best price, or 395€ a month.
 
 ## Billing
 
-Business is billed in prepaid credits. Developer and Partner are monthly subscriptions.
+Business is billed in prepaid credits. Developer is a subscription per deployment. Partner
+is a yearly or monthly subscription.
