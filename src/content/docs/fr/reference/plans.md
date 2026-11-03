@@ -16,7 +16,7 @@ migration : c'est le même système, donc rien à réimporter et personne à ref
 | **Personnalisation** | Aucune | Vos modules et votre Dockerfile | Vos modules et votre Dockerfile |
 | **Applications** | | Une par abonnement | Illimitées |
 | **Cluster** | Partagé | Partagé | Votre propre cluster Kubernetes |
-| **Code, images et sauvegardes** | | Un dépôt GitHub | Votre propre GitHub, et votre propre GitLab pour les images et les sauvegardes |
+| **Code, images et sauvegardes** | | Votre propre dépôt GitHub | Votre propre GitHub, et votre propre GitLab pour les images et les sauvegardes |
 
 ## Business
 
@@ -31,7 +31,7 @@ Pour les développeurs qui construisent leurs propres modules. Une **application
 votre dépôt, votre Dockerfile, un environnement de test et un site en production. Chaque
 déploiement coûte 49 € par mois.
 
-Vous avez une base de données dédiée, un dépôt GitHub dédié pour vos modules, du CI/CD
+Vous avez une base de données dédiée, votre propre dépôt GitHub pour vos modules, du CI/CD
 (poussez sur `dev` pour tester, fusionnez sur `main` pour publier), des environnements de
 test, et la possibilité d'apporter votre propre base de données.
 

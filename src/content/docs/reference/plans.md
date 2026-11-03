@@ -16,7 +16,7 @@ the same system throughout, so there is nothing to re-import and nobody to retra
 | **Customization** | None | Your modules and your Dockerfile | Your modules and your Dockerfile |
 | **Applications** | | One per subscription | Unlimited |
 | **Cluster** | Shared | Shared | Your own Kubernetes cluster |
-| **Code, images and backups** | | A GitHub repository | Your own GitHub, and your own GitLab for images and backups |
+| **Code, images and backups** | | Your own GitHub repository | Your own GitHub, and your own GitLab for images and backups |
 
 ## Business
 
@@ -30,7 +30,7 @@ For developers who build their own modules. An **application** is your repositor
 Dockerfile, a test environment and a live site. Each deployment costs
 49€ a month.
 
-You get a dedicated database, a dedicated GitHub repository for your custom modules,
+You get a dedicated database, your own GitHub repository for your custom modules,
 CI/CD (push to `dev` to test, merge to `main` to release), test environments, and the
 option to [bring your own database](/start/byo-postgres/).
 
