@@ -103,6 +103,9 @@ application's pods (server, worker, longpolling, Redis) in a namespace of their 
 
 ## 5. Add a cluster to an existing project
 
+On the Partner plan, you can also connect a cluster to one project only, for extra
+environments of it:
+
 1. Open the project in the portal. In **Your own clusters**, type a name (for example
    `onprem`) and click **Connect a cluster**.
 2. Run the four commands and paste the token, as in steps 3 and 4.
