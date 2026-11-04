@@ -70,7 +70,14 @@ create databases and roles. It does not need to be a superuser. As a superuser, 
 
 ```sql
 CREATE ROLE ordomatics LOGIN PASSWORD '<choose-a-strong-password>' CREATEDB CREATEROLE;
+\c template1
+CREATE EXTENSION vector;
 ```
+
+The last line matters: only a superuser can install pgvector on a self-hosted server, and
+every new database is copied from `template1`, so each application's database comes with
+it. Managed services (Neon, Supabase) let their admin user install it, so there you can
+skip it.
 
 Then, in the **Postgres server** card, open **Your Postgres server** and fill in **Host**,
 **Port**, **TLS**, **Admin user** (`ordomatics`), **Admin database** (`postgres`) and
@@ -88,6 +95,8 @@ have databases on it.
 | the encrypted connection failed; check the TLS setting | Pick a TLS mode the server supports |
 | The user needs the CREATEDB and CREATEROLE rights | `ALTER ROLE ordomatics CREATEDB CREATEROLE;` |
 | The pgvector extension is not available on the server | Install the pgvector package on the server |
+| Only a superuser can install pgvector on this server | As a superuser: `\c template1` then `CREATE EXTENSION vector;` |
+| A user or database named `odoo_<address>` already exists and was not made by us | Rename or drop it, or give the application another address |
 
 ## 4. Create an application
 

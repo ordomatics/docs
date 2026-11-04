@@ -33,7 +33,7 @@ it. Features that depend on them need your own account keys, set in the project.
 | **Outbound** internet from the nodes. No inbound port, no public IP, no load balancer | A small connector (`cloudflared`, 2 replicas) dials out to Cloudflare, and we reach your API and your sites through that tunnel. Cloudflare needs outbound port 7844 (TCP/UDP). Behind a strict firewall, allow it. |
 | Nodes can pull from public registries | Our image from GitLab's registry, plus Docker Hub (`redis`, `cloudflare/cloudflared`, `nginxinc/nginx-unprivileged`, `bitnami/kubectl`) and the ingress-nginx chart images. |
 | A **default StorageClass** | Each environment keeps a small Redis volume. |
-| Nothing else answering for ingress | We install `ingress-nginx`. An existing ingress controller on the same cluster is not supported. |
+| Nothing else answering for ingress | We install `ingress-nginx`. An existing ingress controller on the same cluster is not supported. K3s-based clusters (K3s, Civo) install Traefik by default: leave it out when you create the cluster. |
 
 ### Capacity
 
