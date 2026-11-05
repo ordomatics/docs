@@ -10,10 +10,15 @@ them **once**, on your account; every application you create then uses them. We
 orchestrate: build, deploy, update, back up.
 
 Once your Partner plan is active, **Projects** shows a **Your infrastructure** link. The
-page has three cards, numbered while you set them up, with a count at the top (**2 of 3
-ready**) and what is still missing. When all three are **Ready**, **Create an application**
-appears at the top. Each card says when it was last checked and which applications use it,
-and **Applications** at the bottom lists them with their cluster and database.
+page is a board: your GitLab in a bar at the top (**Images and backups**), your clusters on
+the left (**Runs on**) and your Postgres server on the right (**Data**). Each application
+has its own colour, the same wherever it appears, so you can follow it from the cluster it
+runs on to the server that holds its data. When all three are ready, **Create an
+application** appears at the top.
+
+Each piece opens a page of its own, with what you can do on the left, and **At a glance**
+and **Activity** (what happened to it, and who did it) on the right. **Ask about this**, on
+each of those pages, opens a support question that already carries what the page shows.
 
 ## 1. Your GitLab
 
@@ -24,7 +29,7 @@ Your GitLab project holds every application's images and backups.
    (*Settings > General > Visibility*).
 2. In that project, open *Settings > Access tokens* and add a token with the
    **Maintainer** role and the **api** scope.
-3. On **Your infrastructure**, open **Your GitLab project** and fill in:
+3. On **Your infrastructure**, click **Connect GitLab** and fill in:
    - **GitLab:** `https://gitlab.com`, or your own GitLab's address.
    - **Project path:** `acme/odoo-images`.
    - **Registry address:** only for your own GitLab, for example `registry.example.com`.
@@ -36,10 +41,10 @@ per application for its GitHub CI to push its image. Each application's images l
 their own path, for example `registry.gitlab.com/acme/odoo-images/pharma`. Their storage
 counts towards your GitLab account.
 
-To change the token later, open **Replace the access token**. The project itself can't be
+To change the token later, open GitLab's page and click **Replace the access token**. The project itself can't be
 changed once it is ready.
 
-| The card says | Do |
+| The page says | Do |
 |---|---|
 | GitLab refused the token: it is wrong, expired or revoked | Create a new token and paste it |
 | The token needs the "api" scope | Create a token with the `api` scope |
@@ -53,8 +58,8 @@ Your applications run on a Kubernetes cluster you have, even one with no public 
 Check that it meets the requirements first:
 [Bring Your Own Cluster, step 1](/start/byo-cluster/#1-prepare-the-cluster).
 
-1. In the **Clusters** card, type a name, for example `onprem`, and click
-   **Connect a cluster**.
+1. Click **+ Connect a cluster**, type a name, for example `onprem`, and click
+   **Connect a cluster**. Its page opens.
 2. Run the four commands shown under it, then paste the token the fourth one prints and
    click **Connect**. The commands and what each one does are in
    [Bring Your Own Cluster](/start/byo-cluster/#3-run-the-four-commands).
@@ -63,17 +68,17 @@ The cluster's badge turns **Connected**, with its Kubernetes version. You can co
 several clusters (**Add another cluster**), and choose one for each application.
 
 We ask each connected cluster every five minutes whether it answers, and the row says when
-it last did. When it stops, the badge turns **Not answering**, with the reason. **Check
-again** asks it right away.
+it last did. When it stops, its row turns **Not answering**, with the reason, and its page
+says how to fix it. **Check again**, on its page, asks it right away.
 
-| The row says | Do |
+| The page says | Do |
 |---|---|
 | The connector on your cluster is not connected to us | Check the machine is on and online, and `kubectl -n ordomatics-system get pods` |
 | The connector is running, but your cluster's API did not answer it | If the machine's address changed, renew its certificate. On MicroK8s: `sudo microk8s refresh-certs --cert server.crt` |
 | Your cluster refused our access token | The token was deleted or replaced on the cluster; connect it again |
 | Your cluster did not answer within 10 seconds | Check the machine is on and its network |
 
-**Disconnect** is only offered while nothing runs on the cluster.
+**Disconnect**, at the bottom of a cluster's page, is only offered while nothing runs on it.
 
 ## 3. Your Postgres server
 
@@ -94,17 +99,17 @@ every new database is copied from `template1`, so each application's database co
 it. Managed services (Neon, Supabase) let their admin user install it, so there you can
 skip it.
 
-Then, in the **Postgres server** card, open **Your Postgres server** and fill in **Host**,
+Then click **+ Add your Postgres server** and fill in **Host**,
 **Port**, **TLS**, **Admin user** (`ordomatics`), **Admin database** (`postgres`) and
 **Password**, and click **Save and check**. If you have a cluster connected, we check from
 inside it, so a server reachable only from there works.
 
 We keep this login's password: each new application's database is created with it. To
-change it, open **Change the admin login**. **Check again** runs the checks once more with
-the login we hold. The host can't be changed while applications have databases on it; the
-card lists them.
+change it, open the server's page and click **Change the admin login**. **Check again**
+runs the checks once more with the login we hold. The host can't be changed while
+applications have databases on it; **Databases we made here** lists them.
 
-| The card says | Do |
+| The page says | Do |
 |---|---|
 | the server refused the password for `<user>` | Retype the password |
 | that host name does not resolve / nothing answers on port `<port>` | Fix the host or port, and check the server accepts connections from where the check runs |
@@ -116,7 +121,7 @@ card lists them.
 
 ## 4. Create an application
 
-When the three cards are **Ready**, click **Create an application** (or **Create a
+When all three are ready, click **Create an application** (or **Create a
 project** on **Projects**). Give it a **name** and an **address**; the address is
 permanent and becomes `https://<address>.ordomatics.com`. The rest is shown, not asked:
 
