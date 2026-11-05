@@ -10,8 +10,10 @@ them **once**, on your account; every application you create then uses them. We
 orchestrate: build, deploy, update, back up.
 
 Once your Partner plan is active, **Projects** shows a **Your infrastructure** link. The
-page is a checklist of three cards, with a count at the top (**2 of 3 ready**). You can
-create applications when all three are **Ready**.
+page has three cards, numbered while you set them up, with a count at the top (**2 of 3
+ready**) and what is still missing. When all three are **Ready**, **Create an application**
+appears at the top. Each card says when it was last checked and which applications use it,
+and **Applications** at the bottom lists them with their cluster and database.
 
 ## 1. Your GitLab
 
@@ -58,7 +60,20 @@ Check that it meets the requirements first:
    [Bring Your Own Cluster](/start/byo-cluster/#3-run-the-four-commands).
 
 The cluster's badge turns **Connected**, with its Kubernetes version. You can connect
-several clusters, and choose one for each application.
+several clusters (**Add another cluster**), and choose one for each application.
+
+We ask each connected cluster every five minutes whether it answers, and the row says when
+it last did. When it stops, the badge turns **Not answering**, with the reason. **Check
+again** asks it right away.
+
+| The row says | Do |
+|---|---|
+| The connector on your cluster is not connected to us | Check the machine is on and online, and `kubectl -n ordomatics-system get pods` |
+| The connector is running, but your cluster's API did not answer it | If the machine's address changed, renew its certificate. On MicroK8s: `sudo microk8s refresh-certs --cert server.crt` |
+| Your cluster refused our access token | The token was deleted or replaced on the cluster; connect it again |
+| Your cluster did not answer within 10 seconds | Check the machine is on and its network |
+
+**Disconnect** is only offered while nothing runs on the cluster.
 
 ## 3. Your Postgres server
 
@@ -85,8 +100,9 @@ Then, in the **Postgres server** card, open **Your Postgres server** and fill in
 inside it, so a server reachable only from there works.
 
 We keep this login's password: each new application's database is created with it. To
-change it, open **Change the admin login**. The host can't be changed once applications
-have databases on it.
+change it, open **Change the admin login**. **Check again** runs the checks once more with
+the login we hold. The host can't be changed while applications have databases on it; the
+card lists them.
 
 | The card says | Do |
 |---|---|
