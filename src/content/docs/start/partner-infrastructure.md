@@ -109,6 +109,11 @@ change it, open the server's page and click **Change the admin login**. **Check 
 runs the checks once more with the login we hold. The host can't be changed while
 applications have databases on it; **Databases we made here** lists them.
 
+You can add more servers (**+ Add a Postgres server** on the board), for example one for
+production data and one for tests, and choose one for each application. A server nothing
+has a database on any more can be removed from its page: we forget its admin login, and the
+server and its data stay yours.
+
 | The page says | Do |
 |---|---|
 | the server refused the password for `<user>` | Retype the password |
@@ -126,7 +131,7 @@ project** on **Projects**). Give it a **name** and an **address**; the address i
 permanent and becomes `https://<address>.ordomatics.com`. The rest is shown, not asked:
 
 - **Runs on:** your cluster, or a choice when you have several.
-- **Database:** a new database of its own on your server.
+- **Database:** a new database of its own on your server, or a choice when you have several.
 - **Images and backups:** in your GitLab project.
 
 Click **Create project**. Setup creates a role and a database for the application on your
