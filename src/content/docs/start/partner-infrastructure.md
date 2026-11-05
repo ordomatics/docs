@@ -1,20 +1,18 @@
 ---
-title: "Partner: set up your infrastructure"
+title: "Set up your infrastructure"
 description: Connect your GitLab, your Kubernetes cluster and your Postgres server once, then create as many applications as you like on them.
 ---
 
-On the [Partner plan](/reference/plans/#partner), your applications run on your
-infrastructure: your code in your GitHub, your images and backups in your GitLab, your
-Odoo on your Kubernetes cluster, your data on your Postgres server. You connect each of
-them **once**, on your account; every application you create then uses them. We
-orchestrate: build, deploy, update, back up.
+On any plan, your applications can run on your own infrastructure, ours, or a mix: your
+images and backups in your GitLab, your Odoo on your Kubernetes cluster, your data on your
+Postgres server. You connect each of them **once**, on your account; every application you
+create can then use them. We orchestrate: build, deploy, update, back up.
 
-Once your Partner plan is active, **Projects** shows a **Your infrastructure** link. The
-page is a board: your GitLab in a bar at the top (**Images and backups**), your clusters on
-the left (**Runs on**) and your Postgres server on the right (**Data**). Each application
-has its own colour, the same wherever it appears, so you can follow it from the cluster it
-runs on to the server that holds its data. When all three are ready, **Create an
-application** appears at the top.
+**Projects** shows a **Your infrastructure** link. The page is a board: images and backups
+in a bar at the top, clusters on the left (**Runs on**) and Postgres servers on the right
+(**Data**). Ours are always there, named **ordomatics**; yours appear beside them as you
+connect them. Each application has its own colour, the same wherever it appears, so you can
+follow it from the cluster it runs on to the server that holds its data.
 
 Each piece opens a page of its own, with what you can do on the left, and **At a glance**
 and **Activity** (what happened to it, and who did it) on the right. **Ask about this**, on
@@ -126,13 +124,16 @@ server and its data stay yours.
 
 ## 4. Create an application
 
-When all three are ready, click **Create an application** (or **Create a
-project** on **Projects**). Give it a **name** and an **address**; the address is
-permanent and becomes `https://<address>.ordomatics.com`. The rest is shown, not asked:
+Click **Create an application** (or **Create a project** on **Projects**). Give it a
+**name** and an **address**; the address is permanent and becomes
+`https://<address>.ordomatics.com`, checked as you type. Then choose where it runs, each
+one **ordomatics** or one of yours:
 
-- **Runs on:** your cluster, or a choice when you have several.
-- **Database:** a new database of its own on your server, or a choice when you have several.
-- **Images and backups:** in your GitLab project.
+- **Servers:** a cluster. One that is not answering cannot be chosen.
+- **Database:** a Postgres server, where we create its own database, or a database of
+  your own by its connection details.
+- **Images and backups:** a GitLab project. On your own cluster, images come from your own
+  GitLab: our registry's credentials never go on a cluster that is not ours.
 
 Click **Create project**. Setup creates a role and a database for the application on your
 server, both named `odoo_` and its address (`odoo_pharma_shop` for `pharma-shop`), with

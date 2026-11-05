@@ -84,7 +84,7 @@ export default defineConfig({
                 { label: "Prepare your server", slug: "start/prepare-your-server" },
                 { label: "Bring Your Own Postgres", slug: "start/byo-postgres" },
                 { label: "Bring Your Own Cluster", slug: "start/byo-cluster" },
-                { label: "Partner: your infrastructure", slug: "start/partner-infrastructure" },
+                { label: "Your infrastructure", slug: "start/partner-infrastructure" },
               ],
             },
           ],

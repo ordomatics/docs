@@ -7,9 +7,9 @@ Your data stays on your server. Ordomatics runs Odoo, and Odoo connects to a Pos
 database that you own and back up. This page goes from an empty server to a running site.
 Replace `myproject` and the example host with your own.
 
-This page is one database per project, which you create. On the Partner plan, you connect
-your Postgres server once and we create each application's database on it: see
-[Partner: set up your infrastructure](/start/partner-infrastructure/).
+This page is one database per project, which you create. You can instead connect your
+Postgres server once and we create each application's database on it: see
+[Set up your infrastructure](/start/partner-infrastructure/).
 
 ## 1. Prepare the database server
 
