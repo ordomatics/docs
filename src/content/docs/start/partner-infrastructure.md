@@ -121,6 +121,7 @@ server and its data stay yours.
 | The pgvector extension is not available on the server | Install the pgvector package on the server |
 | Only a superuser can install pgvector on this server | As a superuser: `\c template1` then `CREATE EXTENSION vector;` |
 | A user or database named `odoo_<address>` already exists and was not made by us | Rename or drop it, or give the application another address |
+| A database named `odoo_<address>_<name>` already exists on your server and was not made by us | Rename or drop it, or give the database another name |
 
 ## 4. Create an application
 
@@ -144,6 +145,18 @@ GitLab.
 
 Create the next application the same way: nothing on the infrastructure page is asked
 again.
+
+## More databases for an application
+
+On an environment on your server, **Add a database** creates another database there, owned
+by the application's user and with pgvector, and gives it its own address: `branch-2` on
+`pharma-shop` is `odoo_pharma_shop_branch_2`, served at
+`https://branch-2.pharma-shop.ordomatics.com`, with the same application and modules. The
+prefix keeps it apart from your own databases and other applications' on the same server;
+the server's page lists them all.
+
+Removing one stops serving it and forgets it; its data stays on your server
+(`DROP DATABASE odoo_pharma_shop_branch_2;` when you no longer need it).
 
 ## Removing an application
 
