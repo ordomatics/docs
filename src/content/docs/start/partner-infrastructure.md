@@ -75,6 +75,7 @@ says how to fix it. **Check again**, on its page, asks it right away.
 | The connector is running, but your cluster's API did not answer it | If the machine's address changed, renew its certificate. On MicroK8s: `sudo microk8s refresh-certs --cert server.crt` |
 | Your cluster refused our access token | The token was deleted or replaced on the cluster; connect it again |
 | Your cluster did not answer within 10 seconds | Check the machine is on and its network |
+| We no longer hold a connection to your cluster | It shows **Connect it** again with the usual commands. The connector is already installed, so run only the last command and paste the token it prints |
 
 **Disconnect**, at the bottom of a cluster's page, is only offered while nothing runs on it.
 
