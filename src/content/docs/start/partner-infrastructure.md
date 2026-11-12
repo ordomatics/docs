@@ -152,7 +152,11 @@ again.
 On an environment on your server, **Add a database** creates another database there, owned
 by the application's user and with pgvector, and gives it its own address: `branch-2` on
 `pharma-shop` is `odoo_pharma_shop_branch_2`, served at
-`https://branch-2.pharma-shop.ordomatics.com`, with the same application and modules. The
+`https://branch-2.pharma-shop.ordomatics.com` on our cluster, or
+`https://branch-2-pharma-shop.ordomatics.com` when the application runs on your own
+cluster (reached through Cloudflare, whose certificate covers one level under
+`ordomatics.com`). It gets the same application and modules. If adding it stops on a
+problem, the round **↻** button next to its status picks it up where it stopped. The
 prefix keeps it apart from your own databases and other applications' on the same server;
 the server's page lists them all.
 
