@@ -32,6 +32,8 @@ kubectl get ingressclass                         # nothing else claiming ingress
 On MicroK8s, write `microk8s kubectl` for every `kubectl` in this page, and
 `microk8s enable dns hostpath-storage` first (not `ingress`).
 
+The connect command of step 3 checks all of this again before it changes anything.
+
 ## 2. Add the cluster on your account
 
 1. In the [portal](https://odoo.ordomatics.com), open **Projects**, then
@@ -42,25 +44,32 @@ On MicroK8s, write `microk8s kubectl` for every `kubectl` in this page, and
 The rest of the account's setup (GitLab, Postgres server) is in
 [Set up your infrastructure](/start/partner-infrastructure/).
 
-## 3. Run the four commands
+## 3. Run the connect command
 
-The cluster shows as **Waiting for you**, with four commands and your tunnel key already
-filled in. Each has a **Copy**
-button, and **Copy all four** copies the lot. Run them, in order, on your cluster:
+The cluster shows as **Waiting for you**, with one command and your tunnel key already
+filled in. Copy it and run it where `kubectl` reaches your cluster as an administrator:
 
-| # | What it does | Command |
-|---|---|---|
-| 1 | Creates the namespace for our connector | `kubectl create namespace ordomatics-system` |
-| 2 | Stores the **tunnel key**; it stays on your cluster | `kubectl -n ordomatics-system create secret generic cloudflared --from-literal=token=<tunnel key>` |
-| 3 | Installs the connector and the account we use | `kubectl apply -f https://odoo.ordomatics.com/saas_portal/static/k8s/ordomatics-bootstrap.yaml` |
-| 4 | Prints the **cluster token** | `kubectl -n ordomatics-system get secret ordomatics-token -o jsonpath='{.data.token}' \| base64 -d` |
+```bash
+curl -fsSL https://odoo.ordomatics.com/saas_portal/static/k8s/connect.sh | bash -s -- <tunnel key>
+```
 
-:::caution
-`kubectl` acts on your *current* context. Check `kubectl config current-context` before
-step 2, or the key lands on whichever cluster is the default. And keep the two secrets
-apart: the key from step 2 stays on your cluster; only the token printed by step 4 goes to
-the portal.
-:::
+It does, in order:
+
+1. Names the cluster your `kubectl` points at (context, API address, nodes) and asks
+   before going on. `kubectl` acts on your *current* context, which may not be the
+   cluster you mean.
+2. Checks the requirements of [step 1](#1-prepare-the-cluster) and stops, changing
+   nothing, if one is missing, saying which.
+3. On MicroK8s on the machine itself, asks whether the machine changes networks (a
+   laptop), and if so gives it a fixed address. See [On a laptop](#on-a-laptop).
+4. Stores the **tunnel key** on your cluster and installs the connector and the account
+   we use. The key stays on your cluster.
+5. Waits until the connector reaches us, and prints the **cluster token**: the only thing
+   you paste in the portal.
+
+It is safe to run again. Without `kubectl`, it uses `microk8s kubectl`; to choose
+another client, put `KUBECTL='microk8s kubectl'` before `bash`. Where nobody can answer
+its question (a script, a CI job), add `--yes` after the key.
 
 Check that the connector runs (both pods `Running`):
 
@@ -70,11 +79,11 @@ kubectl -n ordomatics-system get pods
 
 ## 4. Connect the cluster
 
-Under the commands, paste the token that step 4 printed into the **token** box and click
+Under the command, paste the token it printed at the end into the **token** box and click
 **Connect**. The cluster's badge moves from **Waiting for you** to **Connected**, with its
 Kubernetes version. The check refuses a cluster older than 1.29, or a token that can't
-create namespaces, cluster roles and custom resource definitions, and says which. Applying
-step 3 again grants the latter.
+create namespaces, cluster roles and custom resource definitions, and says which. Running
+the command again grants the latter.
 
 We then install the ingress controller on it. Each application you
 [create on it](/start/partner-infrastructure/#4-create-an-application) gets a namespace of
@@ -93,10 +102,23 @@ application's pods (server, worker, longpolling, Redis) in a namespace of their 
 | The page says | Meaning | Do |
 |---|---|---|
 | Your cluster's connector is not running, or cannot reach us | The connector can't reach Cloudflare | `kubectl -n ordomatics-system logs deploy/cloudflared`; open outbound port 7844; click **Connect** again |
-| Your cluster refused the token | You pasted the wrong one | Run step 4 again and paste its output, not the key from step 2 |
-| We could not reach your cluster | The cluster is off or the connection dropped | Check it's on, run the commands again, click **Try again** |
+| Your cluster refused the token | You pasted the wrong one | Paste the token the command printed at its end, not the key inside the command |
+| We could not reach your cluster | The cluster is off, the connection dropped, or a laptop changed networks | Check it's on, run the command again, click **Try again** |
 | Badge **We hit a problem** | A step failed | Read the message under the badge, fix it, click **Try again** |
 | Pods stay `Pending` | Not enough memory or no default StorageClass | `kubectl describe pod <pod>`; add capacity or a StorageClass |
+
+### On a laptop
+
+MicroK8s advertises the address the machine had when it started. After the laptop moves
+to another network, that address is gone: your site keeps answering, but the portal shows
+**Can't manage your cluster**, and deploys and new databases fail. The connect command
+offers to fix this once, by giving the machine a fixed address of its own (10.250.0.1)
+that MicroK8s uses instead. It needs `sudo`. To do it later:
+
+```bash
+curl -fsSL https://odoo.ordomatics.com/saas_portal/static/k8s/pin-address.sh -o pin-address.sh
+sudo bash pin-address.sh
+```
 
 ## 5. Add a cluster to an existing project
 
@@ -105,7 +127,7 @@ environments of it:
 
 1. Open the project in the portal. In **Your own clusters**, type a name (for example
    `onprem`) and click **Connect a cluster**.
-2. Run the four commands and paste the token, as in steps 3 and 4.
+2. Run the connect command and paste the token, as in steps 3 and 4.
 3. Open **On your own database server** and fill in the database details (see
    [Bring Your Own Postgres](/start/byo-postgres/#4-add-your-database-to-a-project-that-already-exists)).
 4. Under **Runs on**, choose **your cluster onprem**, then click **Connect and create**.

@@ -63,24 +63,11 @@ Your site is served at `<project>.ordomatics.com`.
 
 ### Connecting it
 
-When you create the project, the portal's **Your own clusters** card shows four commands
-with your tunnel token already filled in. Run them in order:
-
-1. Create the namespace for our connector.
-2. Create the `cloudflared` secret. Its value is the **tunnel key**: it lets the
-   connector reach us and stays on your cluster.
-3. Apply the connector manifest.
-4. Print the **cluster token**.
-
-Two things go wrong here:
-
-- **Two different tokens.** Paste only the token printed by step 4 into the portal. The
-  key from step 2 is not it; the portal answers "refused the token".
-- **Wrong cluster.** `kubectl` runs against your current context, which may be an old
-  or dead cluster. Check `kubectl config current-context` before step 2.
-
-If the portal says the connector is not running or cannot reach us, the nodes can't
-reach Cloudflare (see the port above). Fix that and connect again.
+When you create the project, the portal's **Your own clusters** card shows one command
+with your tunnel key already filled in. It checks everything above again, names the
+cluster it is about to change and asks first, installs our connector, and prints the
+**cluster token** to paste in the portal. Details:
+[Bring Your Own Cluster, step 3](/start/byo-cluster/#3-run-the-connect-command).
 
 ### After you disconnect
 
@@ -194,7 +181,9 @@ microk8s kubectl -n customer-db exec pg-0 -- psql -U postgres \
 
 In the project form, use host `pg.customer-db.svc.cluster.local`, port `5432`, database
 `myproject`, role `postgres` (fine for a laptop; use a dedicated role elsewhere), and the
-password you chose. Then run the four connection commands with `microk8s kubectl`.
+password you chose. Then run the connect command on the laptop. Say yes when it asks
+whether the machine changes networks, or the cluster becomes unmanageable at the next
+Wi-Fi change ([why](/start/byo-cluster/#on-a-laptop)).
 
 ## Checklist
 

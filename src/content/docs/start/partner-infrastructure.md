@@ -58,9 +58,9 @@ Check that it meets the requirements first:
 
 1. Click **+ Connect a cluster**, type a name, for example `onprem`, and click
    **Connect a cluster**. Its page opens.
-2. Run the four commands shown under it, then paste the token the fourth one prints and
-   click **Connect**. The commands and what each one does are in
-   [Bring Your Own Cluster](/start/byo-cluster/#3-run-the-four-commands).
+2. Run the command shown under it, then paste the token it prints at the end and click
+   **Connect**. What the command checks and does is in
+   [Bring Your Own Cluster](/start/byo-cluster/#3-run-the-connect-command).
 
 The cluster's badge turns **Connected**, with its Kubernetes version. You can connect
 several clusters (**Add another cluster**), and choose one for each application.
