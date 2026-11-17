@@ -3,6 +3,8 @@ title: Bring Your Own Cluster
 description: Step by step, run your project on a Kubernetes cluster you operate, even with no public address.
 ---
 
+import StepVideo from "../../../components/StepVideo.astro";
+
 Your Odoo runs on your own Kubernetes cluster: a data center, an office, another cloud, a
 laptop. Ordomatics deploys and updates it, and your cluster needs **no public address and
 no open port**. This page goes from a cluster to a running site.
@@ -31,6 +33,11 @@ kubectl get ingressclass                         # nothing else claiming ingress
 
 On MicroK8s, write `microk8s kubectl` for every `kubectl` in this page, and
 `microk8s enable dns hostpath-storage` first (not `ingress`).
+
+No cluster yet? On a laptop, minikube is the quickest. This clip installs it, starts a
+cluster, and runs the checks above:
+
+<StepVideo src="1-prepare.mp4" dir="byo-cluster" caption="Install minikube, start a cluster, and check it. The video has sound." />
 
 The connect command of step 3 checks all of this again before it changes anything.
 
