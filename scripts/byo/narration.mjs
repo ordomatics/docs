@@ -5,8 +5,8 @@ export const SAY = {
     "Start a cluster": "Start a cluster. Minikube runs it in Docker, and gives it eight gigabytes of memory.",
     "Is it ready to be connected?": "Check what the connect command will check: a recent Kubernetes version, a default storage class, and no other ingress controller.",
     // Scene 2
-    "Your infrastructure": "In the portal, open your infrastructure.",
-    "Add the cluster": "Give the cluster a name, and connect it. Its page shows the one command to run.",
+    "Open your project": "In the portal, open your project. Its page has a card for your own clusters.",
+    "Add the cluster": "Give the cluster a name, and connect it. Its card shows the one command to run.",
     // Scene 3
     "Run the connect command": "Run that command where kubectl reaches your cluster. It names the cluster it found, and asks before it changes anything.",
     "It installs our connector": "It checks the cluster, installs a small connector that dials out to us, and prints a token. No port is opened on your side.",
@@ -14,7 +14,7 @@ export const SAY = {
     "Paste the token": "Paste that token in the portal, and connect.",
     "Connected": "The cluster is connected. We install the ingress controller on it, and the platform can now deploy there.",
     // Scene 5
-    "Add an environment on your cluster": "Now run an application on it. Open your project, and add an environment on your own database server.",
+    "Add an environment on your cluster": "Now run an application on it. On the same page, add an environment on your own database server.",
     "Choose your cluster and your database": "Choose your cluster, and give the details of your database. Here, a Postgres running on the same cluster. We check it from inside your cluster before building anything.",
     "The platform deploys it": "The platform deploys Odoo on your cluster. It takes a few minutes.",
     "Your Odoo, on your cluster": "And here it is, at its own address, served from your cluster through the tunnel.",

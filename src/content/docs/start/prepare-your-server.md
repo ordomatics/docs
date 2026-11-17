@@ -124,13 +124,20 @@ and you can correct the details there and try again.
 
 ## Try it on a laptop
 
-The whole setup works on one machine with microk8s, which is how we tested it. The site
-is only up while the laptop is on and awake.
+The whole setup works on one machine, with microk8s or minikube. The site is only up while
+the laptop is on and awake.
 
 ```bash
 sudo snap install microk8s --classic
 microk8s enable dns hostpath-storage      # not "ingress": we install our own
 microk8s kubectl version                  # v1.29 or newer
+```
+
+Or with minikube (and Docker), where you write `kubectl` for every `microk8s kubectl` below:
+
+```bash
+minikube start --driver=docker --memory=8g --cpus=4
+kubectl version                           # v1.29 or newer
 ```
 
 Run Postgres inside it (change the password):
@@ -152,6 +159,8 @@ spec:
       containers:
         - name: pg
           image: pgvector/pgvector:pg17
+          # TLS is required: the image ships a self-signed certificate
+          args: ["-c", "ssl=on", "-c", "ssl_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem", "-c", "ssl_key_file=/etc/ssl/private/ssl-cert-snakeoil.key"]
           env:
             - {name: POSTGRES_PASSWORD, valueFrom: {secretKeyRef: {name: pg, key: password}}}
             - {name: PGDATA, value: /var/lib/postgresql/data/pgdata}
@@ -170,20 +179,23 @@ spec:
 EOF
 ```
 
-Create the database and the extensions:
+Create a role of its own and a database it owns, with the extensions (Odoo refuses to run
+as `postgres`). Use the password you chose above:
 
 ```bash
+PASS=<the-same-password>
 microk8s kubectl -n customer-db exec pg-0 -- psql -U postgres \
-  -c "CREATE DATABASE myproject" \
-  -c "\c myproject" \
+  -c "CREATE ROLE odoo LOGIN PASSWORD '$PASS'" \
+  -c "CREATE DATABASE myproject OWNER odoo"
+microk8s kubectl -n customer-db exec pg-0 -- psql -U postgres -d myproject \
   -c "CREATE EXTENSION IF NOT EXISTS pg_trgm; CREATE EXTENSION IF NOT EXISTS unaccent; CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
-In the project form, use host `pg.customer-db.svc.cluster.local`, port `5432`, database
-`myproject`, role `postgres` (fine for a laptop; use a dedicated role elsewhere), and the
-password you chose. Then run the connect command on the laptop. Say yes when it asks
-whether the machine changes networks, or the cluster becomes unmanageable at the next
-Wi-Fi change ([why](/start/byo-cluster/#on-a-laptop)).
+In the project form, use host `pg.customer-db.svc.cluster.local`, port `5432`, TLS
+`require`, database `myproject`, role `odoo` and the password you chose. Then run the
+connect command on the laptop. On a MicroK8s laptop, say yes when it asks whether the
+machine changes networks, or the cluster becomes unmanageable at the next Wi-Fi change
+([why](/start/byo-cluster/#on-a-laptop)). Minikube has no such problem.
 
 ## Checklist
 

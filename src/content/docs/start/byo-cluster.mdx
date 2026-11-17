@@ -9,6 +9,8 @@ Your Odoo runs on your own Kubernetes cluster: a data center, an office, another
 laptop. Ordomatics deploys and updates it, and your cluster needs **no public address and
 no open port**. This page goes from a cluster to a running site.
 
+<StepVideo src="byo-cluster.mp4" dir="byo-cluster" caption="The whole path on a laptop: prepare a cluster, connect it, deploy on it. The video has sound." />
+
 A small connector (`cloudflared`, two replicas) runs on your cluster and dials **out** to
 Cloudflare. We reach your cluster's API, and visitors reach your site, through that tunnel.
 On the cluster we install an ingress controller (`ingress-nginx`) and run each environment
@@ -137,7 +139,20 @@ environments of it:
 2. Run the connect command and paste the token, as in steps 3 and 4.
 3. Open **On your own database server** and fill in the database details (see
    [Bring Your Own Postgres](/start/byo-postgres/#4-add-your-database-to-a-project-that-already-exists)).
+   With no Postgres yet, the laptop recipe in
+   [Prepare your server](/start/prepare-your-server/#try-it-on-a-laptop) starts one on the
+   same cluster, with TLS and a role of its own, which is what the form needs.
 4. Under **Runs on**, choose **your cluster onprem**, then click **Connect and create**.
+
+The same four steps, one clip each:
+
+<StepVideo src="2-add.mp4" dir="byo-cluster" caption="1. Connect a cluster from the project's page. Its card shows the command." />
+
+<StepVideo src="3-connect.mp4" dir="byo-cluster" caption="2. Run the command where kubectl reaches the cluster: it names the cluster, asks, installs the connector and prints a token." />
+
+<StepVideo src="4-token.mp4" dir="byo-cluster" caption="2. Paste the token in the card: the badge turns Connected." />
+
+<StepVideo src="5-deploy.mp4" dir="byo-cluster" caption="3 and 4. Add an environment on your own database server, running on your cluster." />
 
 Environments there are served at `https://<project>-<environment name>.ordomatics.com`.
 An environment on your cluster uses a database of yours.
@@ -175,7 +190,7 @@ Both should say *not found*. If not, delete them by hand:
 
 ## We ran this
 
-We tested it on a laptop with microk8s, first as an extra environment of a project, then as a
+We tested it on a laptop with microk8s and with minikube, first as an extra environment of a project, then as a
 whole new project on its own cluster and database, reached at its `ordomatics.com` address
 through the tunnel. The laptop recipe is in
 [Prepare your server](/start/prepare-your-server/#try-it-on-a-laptop).

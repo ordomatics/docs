@@ -1,23 +1,37 @@
-// Scene 2: add the cluster on the account; its page shows the connect command.
-import { AUTH, CLUSTER, PORTAL, handoff } from "./common.mjs";
+// Scene 2: connect a cluster from the project page; its card shows the connect command.
+import { AUTH, CLUSTER, PORTAL, PROJECT, handoff, scene } from "./common.mjs";
 import { SAY } from "./narration.mjs";
 import { caption, click, highlight, pause, startClip, type } from "../getting-started/tuto.mjs";
 
-const { page, finish } = await startClip("2-add", { storageState: AUTH, voiceOver: { say: SAY } });
+const deadline = Date.now() + 15 * 60 * 1000;
 
-await page.goto(`${PORTAL}/my/infrastructure`);
-await page.getByRole("link", { name: "+ Connect a cluster" }).waitFor();
+const { page, finish, fastForward } = await scene("2-add", { storageState: AUTH, voiceOver: { say: SAY } });
+
+await page.goto(`${PORTAL}/my/projects`);
+await page.getByRole("link", { name: PROJECT, exact: true }).first().waitFor();
 await pause(page, 800);
-await caption(page, "Your infrastructure");
-await pause(page, 2500);
+await caption(page, "Open your project");
+await click(page, page.getByRole("link", { name: PROJECT, exact: true }).first(), { after: 1200 });
 
+// The project's own-clusters card: one name, one button.
+const form = page.locator("form[action$='/clusters/new']");
+await form.scrollIntoViewIfNeeded();
+await pause(page, 1200);
 await caption(page, "Add the cluster");
-await click(page, page.getByRole("link", { name: "+ Connect a cluster" }), { after: 1200 });
-await type(page, page.locator("#cluster_name"), CLUSTER, { delay: 90 });
-await click(page, page.getByRole("button", { name: "Connect a cluster" }), { after: 1500 });
+await type(page, form.locator("input[name=name]"), CLUSTER, { delay: 90 });
+await click(page, form.getByRole("button", { name: "Connect a cluster" }), { after: 1500 });
 
+// The platform builds the tunnel first ("Preparing…"); the command shows once it is ready.
 const source = page.locator(".js_copy_source").first();
-await source.waitFor({ timeout: 60000 });
+fastForward(20);
+while (!(await source.isVisible().catch(() => false))) {
+    if (Date.now() > deadline) {
+        throw new Error("the cluster never showed its connect command");
+    }
+    await pause(page, 8000);
+    await page.reload();
+}
+fastForward();
 await highlight(page, source);
 await pause(page, 3500);
 await highlight(page, null);
