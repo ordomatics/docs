@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smartacus — vos outils pour travailler et créer</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 210mm; min-height: 297mm; }
+    body { background: #e9e7f0; color: #17122b; font-family: Arial, Helvetica, sans-serif; }
+    .flyer { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fbfaff; }
+    .top { height: 116mm; padding: 15mm 16mm 12mm; color: #fff; background: #17122b; position: relative; overflow: hidden; }
+    .top:before, .top:after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+    .top:before { width: 115mm; height: 115mm; right: -33mm; top: -44mm; background: #5537c8; opacity: .88; }
+    .top:after { width: 84mm; height: 84mm; right: 11mm; bottom: -57mm; border: 1px solid rgba(255,255,255,.2); }
+    .brand, .hero-copy, .app-window { position: relative; z-index: 1; }
+    .brand { display: flex; align-items: center; gap: 3mm; font-size: 16pt; font-weight: 800; letter-spacing: -.4px; }
+    .mark { width: 11mm; height: 11mm; border-radius: 3mm; display: grid; place-items: center; background: #7659e6; font-size: 19pt; line-height: 1; }
+    .brand small { margin-left: auto; color: #d9d3fa; font-size: 8pt; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
+    .hero-copy { margin-top: 14mm; width: 124mm; }
+    .eyebrow { margin: 0 0 3mm; color: #c9bfff; font-size: 9pt; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    h1 { max-width: 125mm; margin: 0; font-size: 37pt; line-height: .99; letter-spacing: -1.5px; }
+    .lead { max-width: 118mm; margin: 5mm 0 0; color: #e4e0f1; font-size: 13pt; line-height: 1.4; }
+    .app-window { position: absolute; z-index: 2; right: 13mm; bottom: 10mm; width: 91mm; height: 40mm; padding: 5mm; border: 1px solid rgba(255,255,255,.3); border-radius: 5mm; background: rgba(255,255,255,.96); box-shadow: 0 5mm 12mm rgba(0,0,0,.22); transform: rotate(-3deg); color: #17122b; }
+    .window-head { display: flex; align-items: center; gap: 1.5mm; margin-bottom: 4mm; color: #6f6a80; font-size: 7pt; }
+    .dot { width: 2mm; height: 2mm; border-radius: 50%; background: #d4d0df; }
+    .window-title { margin-left: auto; font-weight: 700; }
+    .mini-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 2mm; }
+    .mini { height: 22mm; padding: 2.5mm; border-radius: 2mm; background: #f1eff9; }
+    .mini b { display: block; margin-bottom: 2mm; font-size: 8pt; }
+    .mini span { display: block; color: #716b82; font-size: 6.5pt; line-height: 1.5; }
+    .mini:nth-child(1) b { color: #5537c8; }
+    .mini:nth-child(2) b { color: #17825f; }
+    .mini:nth-child(3) b { color: #df7a20; }
+    .mini:nth-child(4) b { color: #d54f78; }
+    .content { padding: 11mm 16mm 0; }
+    .section-title { margin: 0 0 6mm; font-size: 20pt; letter-spacing: -.5px; }
+    .apps { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+    .card { min-height: 41mm; padding: 5mm; border: 1px solid #e5e1ef; border-radius: 4mm; background: #fff; }
+    .card-head { display: flex; align-items: center; gap: 3mm; margin-bottom: 2.5mm; }
+    .icon { width: 10mm; height: 10mm; display: grid; place-items: center; border-radius: 3mm; color: #fff; font-size: 14pt; font-weight: 800; }
+    .violet { background: #6547d2; } .green { background: #168060; } .orange { background: #e28a30; } .pink { background: #d55078; }
+    .card h3 { margin: 0; font-size: 13pt; }
+    .card p { margin: 0; color: #625d70; font-size: 9.5pt; line-height: 1.42; }
+    .strip { display: flex; align-items: center; gap: 4mm; margin-top: 7mm; padding: 4mm 5mm; border-radius: 3mm; background: #f0edfb; color: #42366e; font-size: 9pt; line-height: 1.4; }
+    .spark { color: #674bd1; font-size: 17pt; font-weight: 800; }
+    .bottom { position: absolute; left: 0; right: 0; bottom: 0; min-height: 45mm; padding: 8mm 16mm; color: white; background: #5537c8; display: flex; align-items: center; justify-content: space-between; gap: 8mm; }
+    .cta h2 { margin: 0 0 2mm; font-size: 21pt; letter-spacing: -.4px; }
+    .cta p { margin: 0; color: #e5dfff; font-size: 9.5pt; }
+    .url { margin-top: 2mm !important; color: #fff !important; font-size: 10pt !important; font-weight: 700; }
+    .online { min-width: 29mm; padding: 4mm; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.6); border-radius: 3mm; color: #fff; text-align: center; font-size: 8pt; font-weight: 700; line-height: 1.4; }
+    .fine { position: absolute; bottom: 2.2mm; left: 16mm; color: rgba(255,255,255,.72); font-size: 6pt; }
+    @media screen { body { padding: 12px; } .flyer { margin: 0 auto; box-shadow: 0 12px 40px rgba(25,16,55,.22); } }
+    @media print { html, body { width: 210mm; height: 297mm; background: white; } .flyer { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  <main class="flyer">
+    <header class="top">
+      <div class="brand"><span class="mark">S</span><span>Smartacus</span><small>La suite pour travailler</small></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Un espace. Plusieurs outils.</p>
+        <h1>Créez.<br>Calculez.<br>Présentez.<br>Concevez.</h1>
+        <p class="lead">Les outils qu’il vous faut pour organiser vos idées et faire avancer votre activité.</p>
+      </div>
+      <div class="app-window" aria-hidden="true">
+        <div class="window-head"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="window-title">Votre espace Smartacus</span></div>
+        <div class="mini-grid">
+          <div class="mini"><b>Doc</b><span>Lettre<br>Facture<br>Contrat</span></div>
+          <div class="mini"><b>Tableur</b><span>Données<br>Calculs<br>Graphiques</span></div>
+          <div class="mini"><b>Diapos</b><span>Idées<br>En images<br>À présenter</span></div>
+          <div class="mini"><b>Design</b><span>Affiche<br>Flyer<br>Publication</span></div>
+        </div>
+      </div>
+    </header>
+    <section class="content">
+      <h2 class="section-title">Tout pour passer de l’idée au résultat.</h2>
+      <div class="apps">
+        <article class="card">
+          <div class="card-head"><span class="icon violet">▤</span><h3>Documents</h3></div>
+          <p>Rédigez courriers, devis et factures. Importez un PDF ou une photo, corrigez le texte avec l’aide de l’IA et exportez votre document.</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="icon green">▦</span><h3>Tableurs</h3></div>
+          <p>Organisez vos données, effectuez vos calculs et transformez vos chiffres en tableaux et graphiques utiles.</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="icon orange">▻</span><h3>Présentations</h3></div>
+          <p>Préparez vos idées en diapositives et présentez vos projets avec clarté.</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="icon pink">✳</span><h3>Designs</h3></div>
+          <p>Réalisez affiches, flyers et visuels pour vos annonces, événements et réseaux sociaux.</p>
+        </article>
+      </div>
+      <div class="strip"><span class="spark">✦</span><span><strong>Un coup de main quand il en faut :</strong> dictée vocale, lecture à voix haute et outils d’IA pour vous accompagner dans vos tâches.</span></div>
+    </section>
+    <footer class="bottom">
+      <div class="cta">
+        <h2>À vous de créer.</h2>
+        <p>Ouvrez Smartacus et découvrez les outils.</p>
+        <p class="url">odoo.smartacus.pro/editor</p>
+      </div>
+      <div class="online">Accessible<br>en ligne</div>
+      <small class="fine">Smartacus — vos outils de travail, réunis en ligne.</small>
+    </footer>
+  </main>
+</body>
+</html>
